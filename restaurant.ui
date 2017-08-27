@@ -1,0 +1,754 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1088</width>
+    <height>804</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <widget class="QLCDNumber" name="lcdNumber">
+   <property name="geometry">
+    <rect>
+     <x>830</x>
+     <y>10</y>
+     <width>241</width>
+     <height>91</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>11</pointsize>
+     <weight>50</weight>
+     <italic>false</italic>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLCDNumber {
+	background-color: gray;
+	color: lime;
+}</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_borrar">
+   <property name="geometry">
+    <rect>
+     <x>620</x>
+     <y>500</y>
+     <width>91</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Borrar</string>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>../../../.designer/backup/images/Delete.png</normaloff>../../../.designer/backup/images/Delete.png</iconset>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_facturar">
+   <property name="geometry">
+    <rect>
+     <x>440</x>
+     <y>500</y>
+     <width>91</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="text">
+    <string>Facturar</string>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>../../../Downloads/Prision Break 5/pay.png</normaloff>../../../Downloads/Prision Break 5/pay.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>20</width>
+     <height>20</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QListWidget" name="listWidget">
+   <property name="geometry">
+    <rect>
+     <x>720</x>
+     <y>580</y>
+     <width>181</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="comboBox_selectDB">
+   <property name="geometry">
+    <rect>
+     <x>720</x>
+     <y>649</y>
+     <width>161</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QComboBox{
+	border: 1px solid gray;
+	border-radius: 3px;
+	padding: 1px 18px 1px 3px;
+	min-width: 6em
+}
+
+QLale::drop-down {
+	subcontrol-origin: padding;
+	subcontrol-position: top right;
+	width: 15px;
+
+	border-left-width: 1px;
+	border-left-color: darkgray;
+	border-left-style: solid;
+	border-top-right-radius: 3px;
+	border-bottom-right-radius: 3px;
+}
+QComboBox::on{
+	padding-top: 3px;
+	padding-left: 4px;
+}
+
+QComboBox::down-arrow:on{
+	top: 1px;
+	left: 1px;
+}</string>
+   </property>
+  </widget>
+  <widget class="QProgressBar" name="progressBar">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>780</y>
+     <width>1021</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QProgressBar {
+	border: 1px solid grey;
+	border-radius: 5px;
+	text-align: center;
+}
+
+QProgressBar::chunk {
+	background-color: deepskyblue;
+	margin: 0.5px;
+	width: 10px;
+}</string>
+   </property>
+   <property name="value">
+    <number>24</number>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_num1">
+   <property name="geometry">
+    <rect>
+     <x>440</x>
+     <y>580</y>
+     <width>50</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>25</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>1</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_num2">
+   <property name="geometry">
+    <rect>
+     <x>490</x>
+     <y>580</y>
+     <width>50</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>25</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>2</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_num3">
+   <property name="geometry">
+    <rect>
+     <x>540</x>
+     <y>580</y>
+     <width>50</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>25</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>3</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_num4">
+   <property name="geometry">
+    <rect>
+     <x>440</x>
+     <y>630</y>
+     <width>50</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>25</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>4</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_num5">
+   <property name="geometry">
+    <rect>
+     <x>490</x>
+     <y>630</y>
+     <width>50</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>25</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>5</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_num6">
+   <property name="geometry">
+    <rect>
+     <x>540</x>
+     <y>630</y>
+     <width>50</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>25</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>6</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_num7">
+   <property name="geometry">
+    <rect>
+     <x>440</x>
+     <y>680</y>
+     <width>50</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>25</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>7</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_num8">
+   <property name="geometry">
+    <rect>
+     <x>490</x>
+     <y>680</y>
+     <width>50</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>25</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>8</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_num9">
+   <property name="geometry">
+    <rect>
+     <x>540</x>
+     <y>680</y>
+     <width>50</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>25</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>9</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_10">
+   <property name="geometry">
+    <rect>
+     <x>540</x>
+     <y>730</y>
+     <width>50</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>25</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>,</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_num0">
+   <property name="geometry">
+    <rect>
+     <x>440</x>
+     <y>729</y>
+     <width>101</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>25</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>0</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>660</x>
+     <y>110</y>
+     <width>66</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Article</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>760</x>
+     <y>110</y>
+     <width>66</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>preu</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_caixa">
+   <property name="geometry">
+    <rect>
+     <x>800</x>
+     <y>500</y>
+     <width>91</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Caixa</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_caixa_2">
+   <property name="geometry">
+    <rect>
+     <x>710</x>
+     <y>500</y>
+     <width>91</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Targeta</string>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>../../../Downloads/Prision Break 5/noun_775371_cc.png</normaloff>../../../Downloads/Prision Break 5/noun_775371_cc.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>20</width>
+     <height>20</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_4">
+   <property name="geometry">
+    <rect>
+     <x>880</x>
+     <y>110</y>
+     <width>51</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Ticket:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_time">
+   <property name="geometry">
+    <rect>
+     <x>930</x>
+     <y>100</y>
+     <width>121</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_12">
+   <property name="geometry">
+    <rect>
+     <x>590</x>
+     <y>680</y>
+     <width>50</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>25</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>X</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_13">
+   <property name="geometry">
+    <rect>
+     <x>590</x>
+     <y>630</y>
+     <width>50</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>25</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>-</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_14">
+   <property name="geometry">
+    <rect>
+     <x>590</x>
+     <y>580</y>
+     <width>50</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>25</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>+</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_numc">
+   <property name="geometry">
+    <rect>
+     <x>590</x>
+     <y>730</y>
+     <width>50</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>25</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>C</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_ventas">
+   <property name="geometry">
+    <rect>
+     <x>890</x>
+     <y>500</y>
+     <width>91</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Ventas</string>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>../../../Downloads/Prision Break 5/noun_1109886_cc.png</normaloff>../../../Downloads/Prision Break 5/noun_1109886_cc.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>20</width>
+     <height>20</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_config">
+   <property name="geometry">
+    <rect>
+     <x>980</x>
+     <y>500</y>
+     <width>91</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Config.</string>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>../../../Downloads/Prision Break 5/noun_355454_cc.png</normaloff>../../../Downloads/Prision Break 5/noun_355454_cc.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>20</width>
+     <height>20</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="comboBox_selectEmployee">
+   <property name="geometry">
+    <rect>
+     <x>720</x>
+     <y>690</y>
+     <width>161</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QComboBox{
+	border: 1px solid gray;
+	border-radius: 3px;
+	padding: 1px 18px 1px 3px;
+	min-width: 6em
+}
+
+QLale::drop-down {
+	subcontrol-origin: padding;
+	subcontrol-position: top right;
+	width: 15px;
+
+	border-left-width: 1px;
+	border-left-color: darkgray;
+	border-left-style: solid;
+	border-top-right-radius: 3px;
+	border-bottom-right-radius: 3px;
+}
+QComboBox::on{
+	padding-top: 3px;
+	padding-left: 4px;
+}
+
+QComboBox::down-arrow:on{
+	top: 1px;
+	left: 1px;
+}</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_obrir_taula">
+   <property name="geometry">
+    <rect>
+     <x>530</x>
+     <y>500</y>
+     <width>91</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Taula</string>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>../../../.designer/backup/images/Restaurant Pickup.png</normaloff>../../../.designer/backup/images/Restaurant Pickup.png</iconset>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_ventas_2">
+   <property name="geometry">
+    <rect>
+     <x>900</x>
+     <y>670</y>
+     <width>51</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>../../../.designer/backup/images/User Group Man Woman.png</normaloff>../../../.designer/backup/images/User Group Man Woman.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>32</width>
+     <height>32</height>
+    </size>
+   </property>
+   <property name="autoDefault">
+    <bool>false</bool>
+   </property>
+   <property name="flat">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QTableWidget" name="order_view">
+   <property name="geometry">
+    <rect>
+     <x>450</x>
+     <y>130</y>
+     <width>621</width>
+     <height>361</height>
+    </rect>
+   </property>
+   <property name="horizontalScrollBarPolicy">
+    <enum>Qt::ScrollBarAlwaysOff</enum>
+   </property>
+   <property name="editTriggers">
+    <set>QAbstractItemView::AnyKeyPressed|QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed|QAbstractItemView::SelectedClicked</set>
+   </property>
+   <property name="alternatingRowColors">
+    <bool>true</bool>
+   </property>
+   <property name="showGrid">
+    <bool>true</bool>
+   </property>
+   <property name="gridStyle">
+    <enum>Qt::CustomDashLine</enum>
+   </property>
+   <attribute name="horizontalHeaderDefaultSectionSize">
+    <number>175</number>
+   </attribute>
+   <attribute name="horizontalHeaderMinimumSectionSize">
+    <number>40</number>
+   </attribute>
+   <attribute name="horizontalHeaderStretchLastSection">
+    <bool>true</bool>
+   </attribute>
+   <attribute name="verticalHeaderDefaultSectionSize">
+    <number>30</number>
+   </attribute>
+   <column>
+    <property name="text">
+     <string>Producte</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Quantitat</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Preu</string>
+    </property>
+   </column>
+  </widget>
+  <widget class="QLabel" name="label_table">
+   <property name="geometry">
+    <rect>
+     <x>510</x>
+     <y>110</y>
+     <width>71</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Taula</string>
+   </property>
+  </widget>
+  <zorder>lcdNumber</zorder>
+  <zorder>listWidget</zorder>
+  <zorder>comboBox_selectDB</zorder>
+  <zorder>progressBar</zorder>
+  <zorder>btn_num1</zorder>
+  <zorder>btn_num2</zorder>
+  <zorder>btn_num3</zorder>
+  <zorder>btn_num4</zorder>
+  <zorder>btn_num5</zorder>
+  <zorder>btn_num6</zorder>
+  <zorder>btn_num7</zorder>
+  <zorder>btn_num8</zorder>
+  <zorder>btn_num9</zorder>
+  <zorder>pushButton_10</zorder>
+  <zorder>btn_num0</zorder>
+  <zorder>label_2</zorder>
+  <zorder>label_3</zorder>
+  <zorder>label_4</zorder>
+  <zorder>label_time</zorder>
+  <zorder>pushButton_12</zorder>
+  <zorder>pushButton_13</zorder>
+  <zorder>pushButton_14</zorder>
+  <zorder>btn_numc</zorder>
+  <zorder>comboBox_selectEmployee</zorder>
+  <zorder>btn_ventas_2</zorder>
+  <zorder>btn_facturar</zorder>
+  <zorder>btn_caixa</zorder>
+  <zorder>btn_caixa_2</zorder>
+  <zorder>btn_ventas</zorder>
+  <zorder>btn_config</zorder>
+  <zorder>btn_borrar</zorder>
+  <zorder>btn_obrir_taula</zorder>
+  <zorder>order_view</zorder>
+  <zorder>label_table</zorder>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
