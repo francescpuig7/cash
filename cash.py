@@ -8,6 +8,7 @@ from PyQt5.QtWidgets import (QApplication, QDialog, QPushButton, QTableWidgetIte
 from product import Menjar, Beguda
 from employee import Employee
 # from order import Table
+import csv
 
 class Sales(QDialog):
     def __init__(self, db):
@@ -69,7 +70,7 @@ class Foo(QDialog):
         # connect buttons
         self.btn_ventas.clicked.connect(self.sales.paint)
         self.btn_obrir_taula.clicked.connect(self.show_dialog_table)
-        self.btn_borrar.clicked.connect(self.change_mode)
+        self.btn_borrar.clicked.connect(self.delete_item)
         self.btn_facturar.clicked.connect(self.invoicing)
         self.btn_config.clicked.connect(self.config)
         self.connect_buttons_calc()
@@ -97,7 +98,6 @@ class Foo(QDialog):
         #self.tabWidget
         #self.vBoxlayout = QtGui.QVBoxLayout()
 
-        import csv
         _list_btn = list()
         reader = csv.reader(open('./products.csv', 'r'))
         for index,row in enumerate(reader):
@@ -221,6 +221,16 @@ class Foo(QDialog):
         #result = '%s %s' % (method, price)
 
         self.add_price(price_multi)
+
+    def delete_item(self):
+        if self.order_view.selectedItems():
+            for _item in self.order_view.selectedItems():
+                price = self.order_view.item(_item.row(), 2).text().replace(' €', '')
+                self.lcdNumber.display(self.lcdNumber.value() - float(price))
+                print(self.tables[self.table_id])
+                self.tables[self.table_id].pop(_item.row())
+                print(self.tables[self.table_id])
+                self.order_view.removeRow(_item.row())
 
     def invoicing(self):
         if self.lcdNumber.value() == 0:
@@ -376,12 +386,12 @@ class Ui_Dialog(object):
         Dialog.setObjectName("Dialog")
         Dialog.resize(358, 125)
         l1 = QLabel("Nom")
-        nm = QLineEdit()
+        self.name = QLineEdit()
         l2 = QLabel("Preu")
-        add1 = QLineEdit()
+        self.price = QLineEdit()
         fbox = QFormLayout()
-        fbox.addRow(l1, nm)
-        fbox.addRow(l2, add1)
+        fbox.addRow(l1, self.name)
+        fbox.addRow(l2, self.price)
         btn_ok = QPushButton('Ok')
         btn_cancel = QPushButton('Cancelar')
         fbox.addRow(btn_ok, btn_cancel)
@@ -391,10 +401,16 @@ class Ui_Dialog(object):
         Dialog.setLayout(fbox)
 
     def ok(self):
-        print('ok')
+        if self.price.text() and self.name.text():
+            print('pass')
+        else:
+            print('nopass')
+        with open('products.csv', 'w') as file:
+            file.write('{0},{1}{2}'.format(self.name.text(), self.price.text(), '\n'))
+            file.close()
 
     def cancel(self):
-        print('cancel')
+        pass
 
 class Db:
     def __init__(self):
