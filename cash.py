@@ -100,13 +100,13 @@ class Foo(QDialog):
 
         _list_btn = list()
         reader = csv.reader(open('./products.csv', 'r'))
-        for index,row in enumerate(reader):
+        for index, row in enumerate(reader):
             self.db.insert(row[0].lower(), row[1])
             final_word = ''
             phrase = row[0].split(' ')
             for word in phrase:
                 final_word += word
-            name_button = '{0}_{1}'.format('btn',final_word.lower())
+            name_button = '{0}_{1}'.format('btn', final_word.lower())
             print(name_button)
             if row[1] == '0':
                 self.btn = QPushButton(row[0], self)
