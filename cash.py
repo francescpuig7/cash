@@ -116,13 +116,19 @@ class Foo(QDialog):
         self.btn_obrir_taula.clicked.connect(self.show_dialog_table)
         self.btn_borrar.clicked.connect(self.delete_item)
         self.btn_facturar.clicked.connect(self.invoicing)
-        self.btn_config.clicked.connect(self.config)
+        #self.btn_config.clicked.connect(self.config.login)
+        self.btn_config.clicked.connect(self.config.paint)
+        #self.btn_config.clicked.connect(self.config)
         self.connect_buttons_calc()
         self.comboBox_selectDB.addItem('restaurant.db')
         self.comboBox_selectDB.addItem('cafeteria.db')
         date = time.strftime('%d/%m/%y %H:%M:%S')
         self.label_table.setText('Taula 1')
-        self.label_time.setText(str(date))
+        self.label_time.setText('{0}: {1}'.format(self.label_time.text(), date))
+        self.label_ticket_number.setText('{0}: {1}'.format(self.label_ticket_number.text(), self.ticket_number))
+        self.order_view.setSelectionBehavior(QAbstractItemView.SelectRows)
+        self.db.select_ticket_number()
+        #self.product_box
         #self.btn.clicked.connect(self.paint)
         _tables = self.db.select_table()
         print('taules: ', _tables)
@@ -139,10 +145,9 @@ class Foo(QDialog):
             self.comboBox_selectEmployee.addItem(employee.name)
         self.comboBox_selectEmployee.currentIndexChanged['QString'].connect(self.change_default_employee)
 
-        #self.tabWidget
-        #self.vBoxlayout = QtGui.QVBoxLayout()
-
-        _list_btn = list()
+        _list_btn_rest = list()
+        _list_btn_bar = list()
+        _list_btn_beguda = list()
         reader = csv.reader(open('./products.csv', 'r'))
         for index, row in enumerate(reader):
             self.db.insert(row[0].lower(), row[1])
@@ -152,60 +157,57 @@ class Foo(QDialog):
                 final_word += word
             name_button = '{0}_{1}'.format('btn', final_word.lower())
             print(name_button)
+            # 0: Restaurant, 1: Bar, 2: Begudes
+            self.product_box.setCurrentWidget(self.product_box.widget(0))
+            if row[2] == 'Bar':
+                self.product_box.setCurrentWidget(self.product_box.widget(1))
+            elif row[2] == 'Beguda':
+                self.product_box.setCurrentWidget(self.product_box.widget(2))
             if row[1] == '0':
-                self.btn = QPushButton(row[0], self)
+                self.btn = QPushButton(row[0], self.product_box.currentWidget())
             else:
                 m = Menjar(row[0], row[1]) # Product(name, price)
                 self._products.append(m)
-                text_btn = self.separa('{0} {1}'.format(str(row[0]), str(row[1])))
-                #self.btn = QPushButton(text_btn,self)
-                self.btn = QPushButton('{0} {1}'.format(str(row[0]), str(row[1])), self)
+                self.btn = QPushButton('{0} {1}'.format(str(row[0]), str(row[1])), self.product_box.currentWidget())
 
-            _list_btn.append(self.btn)
+            if row[2] == 'Restaurant':
+                self.btn.setStyleSheet("background-color: springgreen;")
+                _list_btn_rest.append(self.btn)
+            if row[2] == 'Bar':
+                self.btn.setStyleSheet("background-color: tomato;")
+                _list_btn_bar.append(self.btn)
+            if row[2] == 'Beguda':
+                self.btn.setStyleSheet("background-color: gold;")
+                _list_btn_beguda.append(self.btn)
+
             # X, Y, WIDTH, HEIGHT
         num_btn = self.db.select()
+        _list_btn = [_list_btn_rest, _list_btn_bar, _list_btn_beguda]
 
-        x = 30
-        y = 30
-        width = 100
-        height = 100
-        it = 1
-        for button in _list_btn:
-            rand = random.randint(1,3)
-            price = button.text()
-            price = str(price)
-            price = price.split(' ')
-            if len(price) > 1 and price[len(price)-1] != '1.50':
-                #button.clicked.connect(lambda: self.set_product(price[len(price)-1]))
-                button.clicked.connect(lambda: self.set_product(price))
-            elif price[len(price)-1] != '1.50':
-                button.clicked.connect(self.show_dialog)
+        for lbutton in _list_btn:
+            x = 30
+            y = 30
+            width = 110
+            height = 110
+            it = 1
+            for button in lbutton:
+                price = button.text()
+                price = str(price)
+                price = price.split(' ')
+                if len(price) > 1 and price[len(price)-1] != '1.50':
+                    button.clicked.connect(lambda: self.set_product(price))
+                elif price[len(price)-1] != '1.50':
+                    button.clicked.connect(self.show_dialog)
 
-            button.setGeometry(x,y,width,height)
-            if it!=4:
-                if rand == 1:
-                    button.setStyleSheet("background-color: springgreen;")
-                elif rand == 2:
-                    button.setStyleSheet("background-color: gold;")
+                button.setGeometry(x,y,width,height)
+                if it!=6:
+                    x = x+width
+                    it = it+1
                 else:
-                    button.setStyleSheet("background-color: tomato;")
-                x = x+width
-                it = it+1
-            else:
-                it = 1
-                if rand == 1:
-                    button.setStyleSheet("background-color: springgreen;")
-                elif rand == 2:
-                    button.setStyleSheet("background-color: gold;")
-                else:
-                    button.setStyleSheet("background-color: tomato;")
-                y = y+height
-                x = 30
+                    it = 1
+                    y = y+height
+                    x = 30
 
-        for prod in self._products:
-            print(repr(prod))
-
-        #self.tab1.setLayout(self.vBoxlayout)
         self.show()
         self.paint()
 
@@ -235,9 +237,25 @@ class Foo(QDialog):
             completed += 0.0001
             self.progressBar.setValue(completed)
 
-    def add_price(self, price):
-        _price = float(price) + float(self.lcdNumber.value())
+    def add_price(self, total, subtotal=None, iva=None):
+        if subtotal:
+            _subtotal = self.subtotal_label.toPlainText().split(':')
+            if len(_subtotal) > 1:
+                _subtotal = float(_subtotal[1]) + subtotal
+            else:
+                _subtotal = subtotal
+            self.subtotal_label.setText('Subtotal: ' + str(_subtotal))
+        if iva:
+            _iva = self.iva_label.toPlainText().split(':')
+            if len(_iva) > 1:
+                _iva = float(_iva[1]) + iva
+            else:
+                _iva = iva
+            self.iva_label.setText('IVA: ' + str(_iva))
+
+        _price = float(total) + float(self.lcdNumber.value())
         self.lcdNumber.display(_price)
+        self.total_label.setText('Total: ' + str(_price))
 
     def delete_price(self, discount):
         print(type(discount))
@@ -249,7 +267,10 @@ class Foo(QDialog):
         print('CLICK: ', nothing)
         price = str(self.sender().text())
         price = price.split(' ')
-        price_multi = float(price[len(price)-1]) * float(self.add_num)
+        if len(price) > 1:
+            price_multi = float(price[len(price) - 1]) * float(self.add_num)
+        else:
+            price_multi = float(price[len(price)-1]) * float(self.add_num)
 
         if len(price) > 1:
             price = price[len(price)-1]
@@ -264,7 +285,9 @@ class Foo(QDialog):
         #res = self.separa(result)
         #result = '%s %s' % (method, price)
 
-        self.add_price(price_multi)
+        iva = (price_multi * self.iva) / 100
+        subtotal = price_multi
+        self.add_price(price_multi + iva, subtotal, iva)
 
     def delete_item(self):
         if self.order_view.selectedItems():
@@ -275,22 +298,26 @@ class Foo(QDialog):
                 self.tables[self.table_id].pop(_item.row())
                 print(self.tables[self.table_id])
                 self.order_view.removeRow(_item.row())
+                break
 
     def invoicing(self):
         if self.lcdNumber.value() == 0:
             self.messaging.show('No has afegit cap producte', 'warning')
         else:
+            self.ticket_number += 1
+            self.label_ticket_number.setText('Tiquet Nº: {0}'.format(self.ticket_number))
             self.write_invoice()
             self.messaging.show(message='{0} {1}'.format('Cobrat', str(self.lcdNumber.value())))
             self.remove_products_table()
             self.tables[self.table_id].clear()
             self.db.insert_ticket(str(time.strftime('%d/%m/%y %H:%M:%S')),self.table_num, self.employee, float(self.lcdNumber.value()))
+            self.db.update_ticket_number(1, self.ticket_number)
             self.lcdNumber.display(0)
             #self.print_invoice()
 
     def write_invoice(self):
         f = open('invoice.csv', 'w')
-        f.write('TICKET\n')
+        f.write('{0} #{1}{2}'.format('TICKET', self.ticket_number, '\n')),
         f.write(time.strftime('%d/%m/%y %H:%M:%S'))
         f.write('\n')
         f.write('------------\n')
@@ -302,7 +329,7 @@ class Foo(QDialog):
         f.write('------------\n')
         f.write('RESUM:\n')
         to_write = ''
-        for index in range(self.listWidget.count()):
+        for index in range(2):
             to_write = ''
             #to_write = str(self.listWidget.item(index).text())
         f.write(to_write)
@@ -334,12 +361,12 @@ class Foo(QDialog):
         self.lcdNumber.value()
 
     def show_dialog(self):
-        price, ok = QtGui.QInputDialog.getText(self, 'afegir linia', 'Entra el preu:')
+        price, ok = QInputDialog.getText(self, 'afegir linia', 'Entra el preu:')
         if ok:
             product = self.sender().text()
             line = '{0} {1}'.format(str(product), str(price))
-            self.listWidget.addItem(line)
             self.add_price(price)
+            self.set_product(line)
 
     def show_dialog_table(self):
         if self.tables:
