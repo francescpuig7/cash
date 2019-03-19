@@ -289,6 +289,22 @@ class Foo(QDialog):
         self.lcdNumber.display(abs(_price))
 
     def set_product(self, nothing):
+        product = self.products[str(self.sender().text())]
+        price = product.price
+        price_multi = float(price) * float(self.add_num)
+
+        self.set_product_table(product.name, self.add_num, price_multi)
+
+        result = str(self.sender().text())
+        self.tables[self.table_id].append(LineProd(result, self.add_num, price_multi))
+        result = result+u'€   '+str(self.add_num)
+        self.add_num = 1
+
+        iva = (price_multi * self.iva) / 100
+        subtotal = price_multi
+        self.add_price(price_multi + iva, subtotal, iva)
+
+    def set_product_to_del(self, nothing):
         print('CLICK: ', nothing)
         price = str(self.sender().text())
         price = price.split(' ')
