@@ -6,7 +6,7 @@ import random
 from PyQt5 import uic, QtGui
 from PyQt5.QtWidgets import (QAbstractItemView, QApplication, QDialog, QPushButton, QTableWidgetItem, QMessageBox,
                              QLabel, QHBoxLayout, QTextEdit, QWidget, QVBoxLayout, QLineEdit, QFormLayout, QInputDialog)
-from product import Menjar, Beguda
+from product import Product, Menjar, Beguda
 from employee import Employee
 # from order import Table
 import csv
@@ -95,6 +95,7 @@ class Foo(QDialog):
         self._ltables = list()
         self._lprod = list()
         self.tables = dict()
+        self.products = dict()
         # self._ltables.append(Table(1))
         self.employee = 'No. def'
         self.table_num = 'Taula 0'
@@ -145,9 +146,9 @@ class Foo(QDialog):
             self.comboBox_selectEmployee.addItem(employee.name)
         self.comboBox_selectEmployee.currentIndexChanged['QString'].connect(self.change_default_employee)
 
-        _list_btn_rest = list()
-        _list_btn_bar = list()
-        _list_btn_beguda = list()
+        _list_btn_rest = dict()
+        _list_btn_bar = dict()
+        _list_btn_beguda = dict()
         reader = csv.reader(open('./products.csv', 'r'))
         for index, row in enumerate(reader):
             self.db.insert(row[0].lower(), row[1])
@@ -168,45 +169,69 @@ class Foo(QDialog):
             else:
                 m = Menjar(row[0], row[1]) # Product(name, price)
                 self._products.append(m)
-                self.btn = QPushButton('{0} {1}'.format(str(row[0]), str(row[1])), self.product_box.currentWidget())
+                #self.btn = QPushButton('{0} {1}'.format(str(row[0]), str(row[1])), self.product_box.currentWidget())
+                self.btn = QPushButton('{0}'.format(str(row[0])), self.product_box.currentWidget())
+            p = Product(row[0], row[1], row[2])
+            self.products[p.name] = p
 
             if row[2] == 'Restaurant':
                 self.btn.setStyleSheet("background-color: springgreen;")
-                _list_btn_rest.append(self.btn)
+                _list_btn_rest[p] = self.btn
             if row[2] == 'Bar':
                 self.btn.setStyleSheet("background-color: tomato;")
-                _list_btn_bar.append(self.btn)
+                _list_btn_bar[p] = self.btn
             if row[2] == 'Beguda':
                 self.btn.setStyleSheet("background-color: gold;")
-                _list_btn_beguda.append(self.btn)
+                _list_btn_beguda[p] = self.btn
 
             # X, Y, WIDTH, HEIGHT
         num_btn = self.db.select()
         _list_btn = [_list_btn_rest, _list_btn_bar, _list_btn_beguda]
+        if False:
+            for lbutton in _list_btn:
+                x = 30
+                y = 30
+                width = 110
+                height = 110
+                it = 1
+                for button in lbutton:
+                    price = button.text()
+                    price = str(price)
+                    price = price.split(' ')
+                    if len(price) > 1 and price[len(price)-1] != '1.50':
+                        button.clicked.connect(lambda: self.set_product(price))
+                    elif price[len(price)-1] != '1.50':
+                        button.clicked.connect(self.show_dialog)
 
-        for lbutton in _list_btn:
-            x = 30
-            y = 30
-            width = 110
-            height = 110
-            it = 1
-            for button in lbutton:
-                price = button.text()
-                price = str(price)
-                price = price.split(' ')
-                if len(price) > 1 and price[len(price)-1] != '1.50':
-                    button.clicked.connect(lambda: self.set_product(price))
-                elif price[len(price)-1] != '1.50':
-                    button.clicked.connect(self.show_dialog)
-
-                button.setGeometry(x,y,width,height)
-                if it!=6:
-                    x = x+width
-                    it = it+1
-                else:
-                    it = 1
-                    y = y+height
-                    x = 30
+                    button.setGeometry(x,y,width,height)
+                    if it!=6:
+                        x = x+width
+                        it = it+1
+                    else:
+                        it = 1
+                        y = y+height
+                        x = 30
+        else:
+            for lbutton in _list_btn:
+                x = 30
+                y = 30
+                width = 110
+                height = 110
+                it = 1
+                for product, button in lbutton.items():
+                    print('Link... {} {}'.format(button.text(), product.name))
+                    if product.name != 'carta':
+                        button.clicked.connect(lambda: self.set_product(product))
+                    else:
+                        button.clicked.connect(self.show_dialog)
+                    button.setGeometry(x, y, width, height)
+                    if it != 6:
+                        x = x + width
+                        it = it + 1
+                    else:
+                        it = 1
+                        y = y + height
+                        x = 30
 
         self.show()
         self.paint()
