@@ -490,12 +490,13 @@ class Ui_Dialog(object):
 
     def ok(self):
         if self.price.text() and self.name.text():
-            print('pass')
-        else:
-            print('nopass')
-        with open('products.csv', 'w') as file:
-            file.write('{0},{1}{2}'.format(self.name.text(), self.price.text(), '\n'))
-            file.close()
+            try:
+                price = float(self.price.text())
+                with open('products.csv', 'a') as file:
+                    file.write('{0},{1}{2}'.format(self.name.text(), price, '\n'))
+                    file.close()
+            except ValueError:
+                pass
 
     def cancel(self):
         pass
@@ -511,6 +512,8 @@ class Db:
         self.conn.commit()
         self.cursor.execute('''Create table if not exists ticket(id, num_table, employee, total)''')
         self.conn.commit()
+        self.cursor.execute('''Create table if not exists ticket_number(id, number)''') # Innit zero with id 1
+        self.conn.commit()
 
     def insert(self, name, price):
         _values = [(name, price)]
@@ -520,6 +523,10 @@ class Db:
     def insert_ticket(self, num, num_table, employee, total):
         _values = [(num, num_table, employee, total)]
         self.cursor.executemany('Insert into ticket values (?, ?, ?, ?)', _values)
+        self.conn.commit()
+
+    def update_ticket_number(self, id, number):
+        self.cursor.execute('Update ticket_number set number={0} where id={1}'.format(id, number))
         self.conn.commit()
 
     def select(self):
@@ -533,6 +540,11 @@ class Db:
         for row in self.cursor.execute('''select id from taula'''):
             _table.append(row)
         return _table
+
+    def select_ticket_number(self):
+        for row in self.cursor.execute('''select number from ticket_number where id=1'''):
+            print(row)
+        return row[0]
 
     def select_employees(self):
         #_values = [(3, 'Francesc','no')]
