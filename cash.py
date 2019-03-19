@@ -132,10 +132,10 @@ class Foo(QDialog):
         #self.product_box
         #self.btn.clicked.connect(self.paint)
         _tables = self.db.select_table()
-        print('taules: ', _tables)
+
         for table in _tables:
             self.tables[table[0]] = list()  # {table: [prods]}
-        print(self.tables)
+        print('taules: ', self.tables)
         emp_aux = self.db.select_employees()
         for employee in emp_aux:
             emp = Employee(employee[0], employee[1])
@@ -157,7 +157,7 @@ class Foo(QDialog):
             for word in phrase:
                 final_word += word
             name_button = '{0}_{1}'.format('btn', final_word.lower())
-            print(name_button)
+
             # 0: Restaurant, 1: Bar, 2: Begudes
             self.product_box.setCurrentWidget(self.product_box.widget(0))
             if row[2] == 'Bar':
@@ -219,7 +219,6 @@ class Foo(QDialog):
                 height = 110
                 it = 1
                 for product, button in lbutton.items():
-                    print('Link... {} {}'.format(button.text(), product.name))
                     if product.name != 'carta':
                         button.clicked.connect(lambda: self.set_product(product))
                     else:
@@ -247,6 +246,8 @@ class Foo(QDialog):
     def set_product_table(self, product, quant, price):
         rowPosition = self.order_view.rowCount()
         self.order_view.insertRow(rowPosition)
+        if isinstance(price, str):
+            price = float(price)
         self.order_view.setItem(rowPosition, 0, QTableWidgetItem(str(product)))
         self.order_view.setItem(rowPosition, 1, QTableWidgetItem(str(quant)))
         self.order_view.setItem(rowPosition, 2, QTableWidgetItem(str("%.2f" % price)+u' €'))
@@ -296,7 +297,7 @@ class Foo(QDialog):
         self.set_product_table(product.name, self.add_num, price_multi)
 
         result = str(self.sender().text())
-        self.tables[self.table_id].append(LineProd(result, self.add_num, price_multi))
+        self.tables[self.table_id].append(LineProd(result, price_multi, self.add_num))
         result = result+u'€   '+str(self.add_num)
         self.add_num = 1
 
@@ -320,7 +321,7 @@ class Foo(QDialog):
 
         result = str(self.sender().text())
         self.set_product_table(result, self.add_num, price_multi)
-        self.tables[self.table_id].append(LineProd(result, self.add_num, price_multi))
+        self.tables[self.table_id].append(LineProd(result, price_multi, self.add_num))
         result = result+u'€   '+str(self.add_num)
         self.add_num = 1
         #res = self.separa(result)
@@ -341,6 +342,12 @@ class Foo(QDialog):
                 self.order_view.removeRow(_item.row())
                 break
 
+    def reset_displays(self):
+        self.lcdNumber.display(0)
+        self.subtotal_label.setText('Subtotal')
+        self.iva_label.setText('IVA')
+        self.total_label.setText('Total')
+
     def invoicing(self):
         if self.lcdNumber.value() == 0:
             self.messaging.show('No has afegit cap producte', 'warning')
@@ -348,12 +355,12 @@ class Foo(QDialog):
             self.ticket_number += 1
             self.label_ticket_number.setText('Tiquet Nº: {0}'.format(self.ticket_number))
             self.write_invoice()
-            self.messaging.show(message='{0} {1}'.format('Cobrat', str(self.lcdNumber.value())))
+            self.messaging.show(message='{0} {1}'.format('Cobrat', str("%.2f" % self.lcdNumber.value())))
             self.remove_products_table()
             self.tables[self.table_id].clear()
             self.db.insert_ticket(str(time.strftime('%d/%m/%y %H:%M:%S')),self.table_num, self.employee, float(self.lcdNumber.value()))
             self.db.update_ticket_number(1, self.ticket_number)
-            self.lcdNumber.display(0)
+            self.reset_displays()
             #self.print_invoice()
 
     def write_invoice(self):
@@ -458,27 +465,18 @@ class Foo(QDialog):
 
     def change_table(self):
         self.remove_products_table()
-        self.lcdNumber.display(0)
-        self.subtotal_label.setText('Subtotal')
-        self.iva_label.setText('IVA')
-        self.total_label.setText('Total')
+        self.reset_displays()
         for product in self.tables[self.table_id]:
-            self.lcdNumber.display(self.lcdNumber.value() + product.quant)
-            self.set_product_table(product.name, product.price, product.quant)
+            self.lcdNumber.display(self.lcdNumber.value() + float(product.price))
+            self.set_product_table(product.name, product.quant, product.price)
 
         total = self.lcdNumber.value()
         if total != 0.0:
             iva = (total * self.iva) / 100
             subtotal = total - iva
-            print('test')
-            self.subtotal_label.setText('Subtotal: ' + str(subtotal))
-            self.total_label.setText('Total: ' + str(total))
-            self.iva_label.setText('IVA: ' + str(iva))
-
-
-
-
-
+            self.subtotal_label.setText('Subtotal: ' + str("%.2f" % subtotal))
+            self.total_label.setText('Total: ' + str("%.2f" % total))
+            self.iva_label.setText('IVA: ' + str("%.2f" % iva))
 
     def change_default_employee(self, sign):
         print('employee, ', sign)
@@ -609,7 +607,6 @@ class Db:
         elif option == 'month':
             month = time.strftime('/%m/')
             query = '{0}{1}{2}'.format("select * from ticket where id like '%", month, "%'")
-            print(query)
             for row in self.cursor.execute(query):
                 _ticket.append(row)
         elif option == 'day':
