@@ -4,11 +4,51 @@ import os
 import time
 import random
 from PyQt5 import uic, QtGui
-from PyQt5.QtWidgets import (QApplication, QDialog, QPushButton, QTableWidgetItem, QMessageBox, QLabel, QHBoxLayout, QTextEdit, QWidget, QVBoxLayout, QLineEdit, QFormLayout)
+from PyQt5.QtWidgets import (QAbstractItemView, QApplication, QDialog, QPushButton, QTableWidgetItem, QMessageBox,
+                             QLabel, QHBoxLayout, QTextEdit, QWidget, QVBoxLayout, QLineEdit, QFormLayout, QInputDialog)
 from product import Menjar, Beguda
 from employee import Employee
 # from order import Table
 import csv
+
+
+class Login(QDialog):
+    def __init__(self):
+        super(Login, self).__init__()
+        uic.loadUi('login.ui', self)
+        self.buttonBox.accepted.connect(self.accept)
+        self.show()
+
+    def login(self):
+        self.show()
+
+    def accept(self):
+        if self.user_label.text() == 'admin' and self.password_label.text() == 'admin':
+            return True
+        return False
+
+
+class Config(QDialog):
+    def __init__(self, db, messaging):
+        super(Config, self).__init__()
+        uic.loadUi('config.ui', self)
+        self.db = db
+        self.messaging = messaging
+        self.save_button.clicked.connect(self.save_product)
+
+    def save_product(self):
+        if self.price.text() and self.name.text():
+            try:
+                price = float(self.price.text())
+                with open('products.csv', 'a') as file:
+                    file.write('{0},{1}{2}'.format(self.name.text(), price, '\n'))
+                    file.close()
+                self.messaging.show('Producte entrat')
+            except ValueError:
+                self.messaging.show('Producte no entrat', 'warning')
+
+    def paint(self):
+        self.show()
 
 class Sales(QDialog):
     def __init__(self, db):
@@ -44,6 +84,7 @@ class Sales(QDialog):
 
     def change_default_view(self, sign):
         self.view = str(sign)
+        self.paint()
 
 class Foo(QDialog):
     def __init__(self):
@@ -59,10 +100,13 @@ class Foo(QDialog):
         self.table_num = 'Taula 0'
         self.table_id = 1
         self.add_num = 1
+        self.iva = 10
         self.messaging = Message()
         self._mydict = {'menu': 10, 'menucapsetmana': 25, 'vinegre': 2}
         self.db = Db()
+        self.ticket_number = self.db.select_ticket_number()
         self.sales = Sales(self.db)
+        self.config = Config(self.db, self.messaging)
         self.initUi()
 
     def initUi(self):
