@@ -418,9 +418,26 @@ class Foo(QDialog):
     def change_table(self):
         self.remove_products_table()
         self.lcdNumber.display(0)
+        self.subtotal_label.setText('Subtotal')
+        self.iva_label.setText('IVA')
+        self.total_label.setText('Total')
         for product in self.tables[self.table_id]:
             self.lcdNumber.display(self.lcdNumber.value() + product.quant)
             self.set_product_table(product.name, product.price, product.quant)
+
+        total = self.lcdNumber.value()
+        if total != 0.0:
+            iva = (total * self.iva) / 100
+            subtotal = total - iva
+            print('test')
+            self.subtotal_label.setText('Subtotal: ' + str(subtotal))
+            self.total_label.setText('Total: ' + str(total))
+            self.iva_label.setText('IVA: ' + str(iva))
+
+
+
+
+
 
     def change_default_employee(self, sign):
         print('employee, ', sign)
