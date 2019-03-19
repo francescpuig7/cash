@@ -249,7 +249,7 @@ class Foo(QDialog):
         self.order_view.insertRow(rowPosition)
         self.order_view.setItem(rowPosition, 0, QTableWidgetItem(str(product)))
         self.order_view.setItem(rowPosition, 1, QTableWidgetItem(str(quant)))
-        self.order_view.setItem(rowPosition, 2, QTableWidgetItem(str(price)+u' €'))
+        self.order_view.setItem(rowPosition, 2, QTableWidgetItem(str("%.2f" % price)+u' €'))
 
     def remove_products_table(self):
         rows = self.order_view.rowCount()
@@ -269,18 +269,18 @@ class Foo(QDialog):
                 _subtotal = float(_subtotal[1]) + subtotal
             else:
                 _subtotal = subtotal
-            self.subtotal_label.setText('Subtotal: ' + str(_subtotal))
+            self.subtotal_label.setText('Subtotal: ' + str("%.2f" % _subtotal))
         if iva:
             _iva = self.iva_label.toPlainText().split(':')
             if len(_iva) > 1:
                 _iva = float(_iva[1]) + iva
             else:
                 _iva = iva
-            self.iva_label.setText('IVA: ' + str(_iva))
+            self.iva_label.setText('IVA: ' + str("%.2f" % _iva))
 
         _price = float(total) + float(self.lcdNumber.value())
-        self.lcdNumber.display(_price)
-        self.total_label.setText('Total: ' + str(_price))
+        self.lcdNumber.display("%.2f" % _price)
+        self.total_label.setText('Total: ' + str("%.2f" % _price))
 
     def delete_price(self, discount):
         print(type(discount))
@@ -617,7 +617,7 @@ class Message:
 class LineProd:
     def __init__(self, name, price, quant):
         self.name = name
-        self.price = price
+        self.price = "%.2f" % price
         self.quant = quant
 
 if __name__ == '__main__':
