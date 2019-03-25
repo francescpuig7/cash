@@ -2,12 +2,13 @@
 import sys
 import os
 import time
-import random
+from datetime import datetime
 from PyQt5 import uic, QtGui
 from PyQt5.QtWidgets import (QAbstractItemView, QApplication, QDialog, QPushButton, QTableWidgetItem, QMessageBox,
                              QLabel, QHBoxLayout, QTextEdit, QWidget, QVBoxLayout, QLineEdit, QFormLayout, QInputDialog)
 from product import Product, Menjar, Beguda
 from employee import Employee
+from utils import Utils
 # from order import Table
 import csv
 
@@ -46,6 +47,27 @@ class Config(QDialog):
                 self.messaging.show('Producte entrat')
             except ValueError:
                 self.messaging.show('Producte no entrat', 'warning')
+
+    def paint(self):
+        self.show()
+
+class License(QDialog):
+    def __init__(self, db, messaging):
+        super(License, self).__init__()
+        uic.loadUi('license.ui', self)
+        self.db = db
+        self.messaging = messaging
+        self.buttonBox.accepted.connect(self.activate_license)
+        self.buttonBox.rejected.connect(self.reject)
+
+    def activate_license(self):
+        code = self.license_box.text()
+        u = Utils()
+        if u.check_code(code):
+            dt = datetime.now().strftime('%d-%m-%y')
+            self.db.insert_license(code, dt)
+        else:
+            return False
 
     def paint(self):
         self.show()
@@ -108,6 +130,7 @@ class Foo(QDialog):
         self.ticket_number = self.db.select_ticket_number()
         self.sales = Sales(self.db)
         self.config = Config(self.db, self.messaging)
+        self.license = License(self.db, self.messaging)
         self.initUi()
 
     def initUi(self):
@@ -117,6 +140,7 @@ class Foo(QDialog):
         self.btn_obrir_taula.clicked.connect(self.show_dialog_table)
         self.btn_borrar.clicked.connect(self.delete_item)
         self.btn_facturar.clicked.connect(self.invoicing)
+        self.btn_llicencia.clicked.connect(self.license.paint)
         #self.btn_config.clicked.connect(self.config.login)
         self.btn_config.clicked.connect(self.config.paint)
         #self.btn_config.clicked.connect(self.config)
@@ -349,6 +373,9 @@ class Foo(QDialog):
         self.total_label.setText('Total')
 
     def invoicing(self):
+        if not self.check_license():
+            self.messaging.show('Llicencia caducada', type='warning')
+            sys.exit()
         if self.lcdNumber.value() == 0:
             self.messaging.show('No has afegit cap producte', 'warning')
         else:
@@ -501,6 +528,15 @@ class Foo(QDialog):
         else:
             self.add_num = num
 
+    def check_license(self):
+        code, dt = self.db.select_license()
+        u = Utils()
+        if u.check_code(code) and u.check_license(code, dt):
+            return True
+        else:
+            sys.exit()
+            return False
+
     def config(self):
         dialog = QDialog()
         dialog.ui = Ui_Dialog()
@@ -553,6 +589,8 @@ class Db:
         self.conn.commit()
         self.cursor.execute('''Create table if not exists ticket_number(id, number)''') # Innit zero with id 1
         self.conn.commit()
+        self.cursor.execute('''Create table if not exists llicencia(code, timestamp)''')
+        self.conn.commit()
 
     def insert(self, name, price):
         _values = [(name, price)]
@@ -562,6 +600,13 @@ class Db:
     def insert_ticket(self, num, num_table, employee, total):
         _values = [(num, num_table, employee, total)]
         self.cursor.executemany('Insert into ticket values (?, ?, ?, ?)', _values)
+        self.conn.commit()
+
+    def insert_license(self, code, dt):
+        self.cursor.execute('delete from llicencia')
+        self.conn.commit()
+        _values = [(code, dt)]
+        self.cursor.executemany('Insert into llicencia values (?, ?)', _values)
         self.conn.commit()
 
     def update_ticket_number(self, id, number):
@@ -615,6 +660,12 @@ class Db:
             for row in self.cursor.execute(query):
                 _ticket.append(row)
         return _ticket
+
+    def select_license(self):
+        _license = list()
+        for row in self.cursor.execute('''select code, timestamp from llicencia'''):
+            _license.append(row)
+        return _license[0]
 
 class Message:
 
