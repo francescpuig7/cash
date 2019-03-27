@@ -65,9 +65,11 @@ class License(QDialog):
         code = self.license_box.text()
         u = Utils()
         if u.check_code(code):
-            dt = datetime.now().strftime('%d-%m-%y')
+            dt = (datetime.now() + relativedelta(years=1)).strftime('%d-%m-%Y')
             self.db.insert_license(code, dt)
+            self.messaging.show('Llicencia activada')
         else:
+            self.messaging.show('Llicencia no valida', type='warning')
             return False
 
     def paint(self):
