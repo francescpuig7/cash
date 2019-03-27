@@ -16,9 +16,9 @@
   <widget class="QLCDNumber" name="lcdNumber">
    <property name="geometry">
     <rect>
-     <x>1110</x>
+     <x>1000</x>
      <y>10</y>
-     <width>241</width>
+     <width>351</width>
      <height>91</height>
     </rect>
    </property>
@@ -35,6 +35,12 @@
 	background-color: #333333;
 	color: lime;
 }</string>
+   </property>
+   <property name="numDigits">
+    <number>7</number>
+   </property>
+   <property name="mode">
+    <enum>QLCDNumber::Bin</enum>
    </property>
   </widget>
   <widget class="QPushButton" name="btn_borrar">
@@ -352,7 +358,7 @@ QComboBox::down-arrow:on{
     </size>
    </property>
   </widget>
-  <widget class="QPushButton" name="btn_tiquet">
+  <widget class="QPushButton" name="btn_llicencia">
    <property name="geometry">
     <rect>
      <x>1040</x>
@@ -719,7 +725,7 @@ QComboBox::down-arrow:on{
     <rect>
      <x>780</x>
      <y>10</y>
-     <width>311</width>
+     <width>201</width>
      <height>91</height>
     </rect>
    </property>
@@ -727,7 +733,7 @@ QComboBox::down-arrow:on{
     <string/>
    </property>
    <property name="pixmap">
-    <pixmap>Restaurant-logo-collection/139.jpg</pixmap>
+    <pixmap>logo.jpg</pixmap>
    </property>
    <property name="scaledContents">
     <bool>true</bool>
@@ -853,8 +859,8 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>650</y>
-       <width>1381</width>
+       <y>670</y>
+       <width>701</width>
        <height>23</height>
       </rect>
      </property>
@@ -949,7 +955,7 @@ QProgressBar::chunk {
   <zorder>btn_ventas_2</zorder>
   <zorder>btn_facturar</zorder>
   <zorder>btn_caixa</zorder>
-  <zorder>btn_tiquet</zorder>
+  <zorder>btn_llicencia</zorder>
   <zorder>btn_ventas</zorder>
   <zorder>btn_config</zorder>
   <zorder>btn_borrar</zorder>
