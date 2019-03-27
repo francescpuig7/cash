@@ -2,12 +2,14 @@
 import sys
 import os
 import time
-import random
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 from PyQt5 import uic, QtGui
 from PyQt5.QtWidgets import (QAbstractItemView, QApplication, QDialog, QPushButton, QTableWidgetItem, QMessageBox,
                              QLabel, QHBoxLayout, QTextEdit, QWidget, QVBoxLayout, QLineEdit, QFormLayout, QInputDialog)
-from product import Menjar, Beguda
+from product import Product, Menjar, Beguda
 from employee import Employee
+from utils import Utils
 # from order import Table
 import csv
 
@@ -46,6 +48,29 @@ class Config(QDialog):
                 self.messaging.show('Producte entrat')
             except ValueError:
                 self.messaging.show('Producte no entrat', 'warning')
+
+    def paint(self):
+        self.show()
+
+class License(QDialog):
+    def __init__(self, db, messaging):
+        super(License, self).__init__()
+        uic.loadUi('license.ui', self)
+        self.db = db
+        self.messaging = messaging
+        self.buttonBox.accepted.connect(self.activate_license)
+        self.buttonBox.rejected.connect(self.reject)
+
+    def activate_license(self):
+        code = self.license_box.text()
+        u = Utils()
+        if u.check_code(code):
+            dt = (datetime.now() + relativedelta(years=1)).strftime('%d-%m-%Y')
+            self.db.insert_license(code, dt)
+            self.messaging.show('Llicencia activada')
+        else:
+            self.messaging.show('Llicencia no valida', type='warning')
+            return False
 
     def paint(self):
         self.show()
@@ -95,6 +120,7 @@ class Foo(QDialog):
         self._ltables = list()
         self._lprod = list()
         self.tables = dict()
+        self.products = dict()
         # self._ltables.append(Table(1))
         self.employee = 'No. def'
         self.table_num = 'Taula 0'
@@ -107,6 +133,7 @@ class Foo(QDialog):
         self.ticket_number = self.db.select_ticket_number()
         self.sales = Sales(self.db)
         self.config = Config(self.db, self.messaging)
+        self.license = License(self.db, self.messaging)
         self.initUi()
 
     def initUi(self):
@@ -116,6 +143,7 @@ class Foo(QDialog):
         self.btn_obrir_taula.clicked.connect(self.show_dialog_table)
         self.btn_borrar.clicked.connect(self.delete_item)
         self.btn_facturar.clicked.connect(self.invoicing)
+        self.btn_llicencia.clicked.connect(self.license.paint)
         #self.btn_config.clicked.connect(self.config.login)
         self.btn_config.clicked.connect(self.config.paint)
         #self.btn_config.clicked.connect(self.config)
@@ -131,10 +159,10 @@ class Foo(QDialog):
         #self.product_box
         #self.btn.clicked.connect(self.paint)
         _tables = self.db.select_table()
-        print('taules: ', _tables)
+
         for table in _tables:
             self.tables[table[0]] = list()  # {table: [prods]}
-        print(self.tables)
+        print('taules: ', self.tables)
         emp_aux = self.db.select_employees()
         for employee in emp_aux:
             emp = Employee(employee[0], employee[1])
@@ -145,9 +173,9 @@ class Foo(QDialog):
             self.comboBox_selectEmployee.addItem(employee.name)
         self.comboBox_selectEmployee.currentIndexChanged['QString'].connect(self.change_default_employee)
 
-        _list_btn_rest = list()
-        _list_btn_bar = list()
-        _list_btn_beguda = list()
+        _list_btn_rest = dict()
+        _list_btn_bar = dict()
+        _list_btn_beguda = dict()
         reader = csv.reader(open('./products.csv', 'r'))
         for index, row in enumerate(reader):
             self.db.insert(row[0].lower(), row[1])
@@ -156,7 +184,7 @@ class Foo(QDialog):
             for word in phrase:
                 final_word += word
             name_button = '{0}_{1}'.format('btn', final_word.lower())
-            print(name_button)
+
             # 0: Restaurant, 1: Bar, 2: Begudes
             self.product_box.setCurrentWidget(self.product_box.widget(0))
             if row[2] == 'Bar':
@@ -168,45 +196,68 @@ class Foo(QDialog):
             else:
                 m = Menjar(row[0], row[1]) # Product(name, price)
                 self._products.append(m)
-                self.btn = QPushButton('{0} {1}'.format(str(row[0]), str(row[1])), self.product_box.currentWidget())
+                #self.btn = QPushButton('{0} {1}'.format(str(row[0]), str(row[1])), self.product_box.currentWidget())
+                self.btn = QPushButton('{0}'.format(str(row[0])), self.product_box.currentWidget())
+            p = Product(row[0], row[1], row[2])
+            self.products[p.name] = p
 
             if row[2] == 'Restaurant':
                 self.btn.setStyleSheet("background-color: springgreen;")
-                _list_btn_rest.append(self.btn)
+                _list_btn_rest[p] = self.btn
             if row[2] == 'Bar':
                 self.btn.setStyleSheet("background-color: tomato;")
-                _list_btn_bar.append(self.btn)
+                _list_btn_bar[p] = self.btn
             if row[2] == 'Beguda':
                 self.btn.setStyleSheet("background-color: gold;")
-                _list_btn_beguda.append(self.btn)
+                _list_btn_beguda[p] = self.btn
 
             # X, Y, WIDTH, HEIGHT
         num_btn = self.db.select()
         _list_btn = [_list_btn_rest, _list_btn_bar, _list_btn_beguda]
+        if False:
+            for lbutton in _list_btn:
+                x = 30
+                y = 30
+                width = 110
+                height = 110
+                it = 1
+                for button in lbutton:
+                    price = button.text()
+                    price = str(price)
+                    price = price.split(' ')
+                    if len(price) > 1 and price[len(price)-1] != '1.50':
+                        button.clicked.connect(lambda: self.set_product(price))
+                    elif price[len(price)-1] != '1.50':
+                        button.clicked.connect(self.show_dialog)
 
-        for lbutton in _list_btn:
-            x = 30
-            y = 30
-            width = 110
-            height = 110
-            it = 1
-            for button in lbutton:
-                price = button.text()
-                price = str(price)
-                price = price.split(' ')
-                if len(price) > 1 and price[len(price)-1] != '1.50':
-                    button.clicked.connect(lambda: self.set_product(price))
-                elif price[len(price)-1] != '1.50':
-                    button.clicked.connect(self.show_dialog)
-
-                button.setGeometry(x,y,width,height)
-                if it!=6:
-                    x = x+width
-                    it = it+1
-                else:
-                    it = 1
-                    y = y+height
-                    x = 30
+                    button.setGeometry(x,y,width,height)
+                    if it!=6:
+                        x = x+width
+                        it = it+1
+                    else:
+                        it = 1
+                        y = y+height
+                        x = 30
+        else:
+            for lbutton in _list_btn:
+                x = 30
+                y = 30
+                width = 110
+                height = 110
+                it = 1
+                for product, button in lbutton.items():
+                    if product.name != 'carta':
+                        button.clicked.connect(lambda: self.set_product(product))
+                    else:
+                        button.clicked.connect(self.show_dialog)
+                    button.setGeometry(x, y, width, height)
+                    if it != 6:
+                        x = x + width
+                        it = it + 1
+                    else:
+                        it = 1
+                        y = y + height
+                        x = 30
 
         self.show()
         self.paint()
@@ -222,9 +273,11 @@ class Foo(QDialog):
     def set_product_table(self, product, quant, price):
         rowPosition = self.order_view.rowCount()
         self.order_view.insertRow(rowPosition)
+        if isinstance(price, str):
+            price = float(price)
         self.order_view.setItem(rowPosition, 0, QTableWidgetItem(str(product)))
         self.order_view.setItem(rowPosition, 1, QTableWidgetItem(str(quant)))
-        self.order_view.setItem(rowPosition, 2, QTableWidgetItem(str(price)+u' €'))
+        self.order_view.setItem(rowPosition, 2, QTableWidgetItem(str("%.2f" % price)+u' €'))
 
     def remove_products_table(self):
         rows = self.order_view.rowCount()
@@ -244,18 +297,18 @@ class Foo(QDialog):
                 _subtotal = float(_subtotal[1]) + subtotal
             else:
                 _subtotal = subtotal
-            self.subtotal_label.setText('Subtotal: ' + str(_subtotal))
+            self.subtotal_label.setText('Subtotal: ' + str("%.2f" % _subtotal))
         if iva:
             _iva = self.iva_label.toPlainText().split(':')
             if len(_iva) > 1:
                 _iva = float(_iva[1]) + iva
             else:
                 _iva = iva
-            self.iva_label.setText('IVA: ' + str(_iva))
+            self.iva_label.setText('IVA: ' + str("%.2f" % _iva))
 
         _price = float(total) + float(self.lcdNumber.value())
-        self.lcdNumber.display(_price)
-        self.total_label.setText('Total: ' + str(_price))
+        self.lcdNumber.display("%.2f" % _price)
+        self.total_label.setText('Total: ' + str("%.2f" % _price))
 
     def delete_price(self, discount):
         print(type(discount))
@@ -264,6 +317,22 @@ class Foo(QDialog):
         self.lcdNumber.display(abs(_price))
 
     def set_product(self, nothing):
+        product = self.products[str(self.sender().text())]
+        price = product.price
+        price_multi = float(price) * float(self.add_num)
+
+        self.set_product_table(product.name, self.add_num, price_multi)
+
+        result = str(self.sender().text())
+        self.tables[self.table_id].append(LineProd(result, price_multi, self.add_num))
+        result = result+u'€   '+str(self.add_num)
+        self.add_num = 1
+
+        iva = (price_multi * self.iva) / 100
+        subtotal = price_multi
+        self.add_price(price_multi + iva, subtotal, iva)
+
+    def set_product_to_del(self, nothing):
         print('CLICK: ', nothing)
         price = str(self.sender().text())
         price = price.split(' ')
@@ -279,7 +348,7 @@ class Foo(QDialog):
 
         result = str(self.sender().text())
         self.set_product_table(result, self.add_num, price_multi)
-        self.tables[self.table_id].append(LineProd(result, self.add_num, price_multi))
+        self.tables[self.table_id].append(LineProd(result, price_multi, self.add_num))
         result = result+u'€   '+str(self.add_num)
         self.add_num = 1
         #res = self.separa(result)
@@ -300,19 +369,28 @@ class Foo(QDialog):
                 self.order_view.removeRow(_item.row())
                 break
 
+    def reset_displays(self):
+        self.lcdNumber.display(0)
+        self.subtotal_label.setText('Subtotal')
+        self.iva_label.setText('IVA')
+        self.total_label.setText('Total')
+
     def invoicing(self):
+        if not self.check_license():
+            self.messaging.show('Llicencia caducada', type='warning')
+            sys.exit()
         if self.lcdNumber.value() == 0:
             self.messaging.show('No has afegit cap producte', 'warning')
         else:
             self.ticket_number += 1
             self.label_ticket_number.setText('Tiquet Nº: {0}'.format(self.ticket_number))
             self.write_invoice()
-            self.messaging.show(message='{0} {1}'.format('Cobrat', str(self.lcdNumber.value())))
+            self.messaging.show(message='{0} {1}'.format('Cobrat', str("%.2f" % self.lcdNumber.value())))
             self.remove_products_table()
             self.tables[self.table_id].clear()
             self.db.insert_ticket(str(time.strftime('%d/%m/%y %H:%M:%S')),self.table_num, self.employee, float(self.lcdNumber.value()))
             self.db.update_ticket_number(1, self.ticket_number)
-            self.lcdNumber.display(0)
+            self.reset_displays()
             #self.print_invoice()
 
     def write_invoice(self):
@@ -417,27 +495,21 @@ class Foo(QDialog):
 
     def change_table(self):
         self.remove_products_table()
-        self.lcdNumber.display(0)
-        self.subtotal_label.setText('Subtotal')
-        self.iva_label.setText('IVA')
-        self.total_label.setText('Total')
+        self.reset_displays()
+        total = 0
         for product in self.tables[self.table_id]:
-            self.lcdNumber.display(self.lcdNumber.value() + product.quant)
-            self.set_product_table(product.name, product.price, product.quant)
+            total += float(product.price)
+            self.set_product_table(product.name, product.quant, product.price)
 
-        total = self.lcdNumber.value()
         if total != 0.0:
             iva = (total * self.iva) / 100
+            total = total + iva
             subtotal = total - iva
-            print('test')
-            self.subtotal_label.setText('Subtotal: ' + str(subtotal))
-            self.total_label.setText('Total: ' + str(total))
-            self.iva_label.setText('IVA: ' + str(iva))
-
-
-
-
-
+            self.subtotal_label.setText('Subtotal: ' + str("%.2f" % subtotal))
+            self.total_label.setText('Total: ' + str("%.2f" % total))
+            self.iva_label.setText('IVA: ' + str("%.2f" % iva))
+            _total = self.lcdNumber.value() + float(total)
+            self.lcdNumber.display("%.2f" % _total)
 
     def change_default_employee(self, sign):
         print('employee, ', sign)
@@ -461,6 +533,15 @@ class Foo(QDialog):
             self.add_num = 1
         else:
             self.add_num = num
+
+    def check_license(self):
+        code, dt = self.db.select_license()
+        u = Utils()
+        if u.check_code(code) and u.check_license(code, dt):
+            return True
+        else:
+            sys.exit()
+            return False
 
     def config(self):
         dialog = QDialog()
@@ -514,6 +595,8 @@ class Db:
         self.conn.commit()
         self.cursor.execute('''Create table if not exists ticket_number(id, number)''') # Innit zero with id 1
         self.conn.commit()
+        self.cursor.execute('''Create table if not exists llicencia(code, timestamp)''')
+        self.conn.commit()
 
     def insert(self, name, price):
         _values = [(name, price)]
@@ -523,6 +606,13 @@ class Db:
     def insert_ticket(self, num, num_table, employee, total):
         _values = [(num, num_table, employee, total)]
         self.cursor.executemany('Insert into ticket values (?, ?, ?, ?)', _values)
+        self.conn.commit()
+
+    def insert_license(self, code, dt):
+        self.cursor.execute('delete from llicencia')
+        self.conn.commit()
+        _values = [(code, dt)]
+        self.cursor.executemany('Insert into llicencia values (?, ?)', _values)
         self.conn.commit()
 
     def update_ticket_number(self, id, number):
@@ -568,7 +658,6 @@ class Db:
         elif option == 'month':
             month = time.strftime('/%m/')
             query = '{0}{1}{2}'.format("select * from ticket where id like '%", month, "%'")
-            print(query)
             for row in self.cursor.execute(query):
                 _ticket.append(row)
         elif option == 'day':
@@ -577,6 +666,12 @@ class Db:
             for row in self.cursor.execute(query):
                 _ticket.append(row)
         return _ticket
+
+    def select_license(self):
+        _license = list()
+        for row in self.cursor.execute('''select code, timestamp from llicencia'''):
+            _license.append(row)
+        return _license[0]
 
 class Message:
 
@@ -592,7 +687,7 @@ class Message:
 class LineProd:
     def __init__(self, name, price, quant):
         self.name = name
-        self.price = price
+        self.price = "%.2f" % price
         self.quant = quant
 
 if __name__ == '__main__':
