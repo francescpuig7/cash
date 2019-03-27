@@ -3,6 +3,7 @@ import sys
 import os
 import time
 from datetime import datetime
+from dateutil.relativedelta import relativedelta
 from PyQt5 import uic, QtGui
 from PyQt5.QtWidgets import (QAbstractItemView, QApplication, QDialog, QPushButton, QTableWidgetItem, QMessageBox,
                              QLabel, QHBoxLayout, QTextEdit, QWidget, QVBoxLayout, QLineEdit, QFormLayout, QInputDialog)
@@ -493,17 +494,20 @@ class Foo(QDialog):
     def change_table(self):
         self.remove_products_table()
         self.reset_displays()
+        total = 0
         for product in self.tables[self.table_id]:
-            self.lcdNumber.display(self.lcdNumber.value() + float(product.price))
+            total += float(product.price)
             self.set_product_table(product.name, product.quant, product.price)
 
-        total = self.lcdNumber.value()
         if total != 0.0:
             iva = (total * self.iva) / 100
+            total = total + iva
             subtotal = total - iva
             self.subtotal_label.setText('Subtotal: ' + str("%.2f" % subtotal))
             self.total_label.setText('Total: ' + str("%.2f" % total))
             self.iva_label.setText('IVA: ' + str("%.2f" % iva))
+            _total = self.lcdNumber.value() + float(total)
+            self.lcdNumber.display("%.2f" % _total)
 
     def change_default_employee(self, sign):
         print('employee, ', sign)
