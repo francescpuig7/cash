@@ -9,7 +9,7 @@ class Utils(object):
 
     def check_license(self, code, dt):
         print(code)
-        if datetime.now().strftime('%d-%m-%y') <= dt:
+        if datetime.now() <= datetime.strptime(dt, '%d-%m-%Y'):
             return True
         else:
             return False
