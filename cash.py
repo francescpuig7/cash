@@ -42,10 +42,14 @@ class Config(QDialog):
         if self.price.text() and self.name.text():
             try:
                 price = float(self.price.text())
+                category = str(self.checkbox_categoria.currentText())
                 with open('products.csv', 'a') as file:
-                    file.write('{0},{1}{2}'.format(self.name.text(), price, '\n'))
+                    file.write('{0},{1},{2}\n'.format(self.name.text(), price, category))
                     file.close()
                 self.messaging.show('Producte entrat')
+                # Reset texts
+                self.price.setText('')
+                self.name.setText('')
             except ValueError:
                 self.messaging.show('Producte no entrat', 'warning')
 
