@@ -335,7 +335,7 @@ QComboBox::down-arrow:on{
     <string>0</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="btn_caixa">
+  <widget class="QPushButton" name="btn_llistats">
    <property name="geometry">
     <rect>
      <x>1130</x>
@@ -954,7 +954,7 @@ QProgressBar::chunk {
   <zorder>comboBox_selectEmployee</zorder>
   <zorder>btn_ventas_2</zorder>
   <zorder>btn_facturar</zorder>
-  <zorder>btn_caixa</zorder>
+  <zorder>btn_llistats</zorder>
   <zorder>btn_llicencia</zorder>
   <zorder>btn_ventas</zorder>
   <zorder>btn_config</zorder>

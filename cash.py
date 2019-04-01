@@ -130,7 +130,7 @@ class Foo(QDialog):
         self.table_num = 'Taula 0'
         self.table_id = 1
         self.add_num = 1
-        self.iva = 10
+        self.iva = 21
         self.messaging = Message()
         self._mydict = {'menu': 10, 'menucapsetmana': 25, 'vinegre': 2}
         self.db = Db()
@@ -333,8 +333,8 @@ class Foo(QDialog):
         self.add_num = 1
 
         iva = (price_multi * self.iva) / 100
-        subtotal = price_multi
-        self.add_price(price_multi + iva, subtotal, iva)
+        subtotal = price_multi - iva
+        self.add_price(price_multi, subtotal, iva)
 
     def set_product_to_del(self, nothing):
         print('CLICK: ', nothing)
@@ -359,19 +359,33 @@ class Foo(QDialog):
         #result = '%s %s' % (method, price)
 
         iva = (price_multi * self.iva) / 100
-        subtotal = price_multi
-        self.add_price(price_multi + iva, subtotal, iva)
+        subtotal = price_multi - iva
+        self.add_price(price_multi, subtotal, iva)
 
     def delete_item(self):
         if self.order_view.selectedItems():
             for _item in self.order_view.selectedItems():
-                price = self.order_view.item(_item.row(), 2).text().replace(' €', '')
-                self.lcdNumber.display(self.lcdNumber.value() - float(price))
+                #price = self.order_view.item(_item.row(), 2).text().replace(' €', '')
+                #self.lcdNumber.display(self.lcdNumber.value() - float(price))
                 print(self.tables[self.table_id])
                 self.tables[self.table_id].pop(_item.row())
                 print(self.tables[self.table_id])
                 self.order_view.removeRow(_item.row())
+                self.recalc_price()
                 break
+
+    def recalc_price(self):
+        total = 0
+        for product in self.tables[self.table_id]:
+            total += float(product.price)
+
+        if total != 0.0:
+            iva = (total * self.iva) / 100
+            subtotal = total - iva
+            self.subtotal_label.setText('Subtotal: ' + str("%.2f" % subtotal))
+            self.total_label.setText('Total: ' + str("%.2f" % total))
+            self.iva_label.setText('IVA: ' + str("%.2f" % iva))
+            self.lcdNumber.display("%.2f" % total)
 
     def reset_displays(self):
         self.lcdNumber.display(0)
@@ -507,7 +521,6 @@ class Foo(QDialog):
 
         if total != 0.0:
             iva = (total * self.iva) / 100
-            total = total + iva
             subtotal = total - iva
             self.subtotal_label.setText('Subtotal: ' + str("%.2f" % subtotal))
             self.total_label.setText('Total: ' + str("%.2f" % total))
@@ -537,6 +550,23 @@ class Foo(QDialog):
             self.add_num = 1
         else:
             self.add_num = num
+
+    def llistats(self):
+        data = self.db.select_ticket(option='month')
+        print(data)
+        with open('/Users/puig/Desktop/llistat.csv', 'w') as f:
+            f.write('CONCEPTE;DIA;% IVA;IVA;SUBTOTAL;TOTAL;\n')
+            for row in data:
+                taula = row[1]
+                if taula == 'Taula  4':
+                    concepte = 'Barra'
+                else:
+                    concepte = 'Ingres - apat'
+                iva = (float(row[3]) * self.iva) / 100
+                subtotal = float(row[3]) - iva
+                f.write('{};{};{};{};{};{};\n'.format(
+                    concepte, row[0], self.iva, "%.2f" % iva, "%.2f" % subtotal, "%.2f" % row[3])
+                )
 
     def check_license(self):
         code, dt = self.db.select_license()
