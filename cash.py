@@ -4,6 +4,7 @@ import os
 import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+import calendar
 from PyQt5 import uic, QtGui
 from PyQt5.QtWidgets import (QAbstractItemView, QApplication, QDialog, QPushButton, QTableWidgetItem, QMessageBox,
                              QLabel, QHBoxLayout, QTextEdit, QWidget, QVBoxLayout, QLineEdit, QFormLayout, QInputDialog)
@@ -151,6 +152,7 @@ class Foo(QDialog):
         #self.btn_config.clicked.connect(self.config.login)
         self.btn_config.clicked.connect(self.config.paint)
         #self.btn_config.clicked.connect(self.config)
+        self.btn_llistats.clicked.connect(self.llistats)
         self.connect_buttons_calc()
         self.comboBox_selectDB.addItem('restaurant.db')
         self.comboBox_selectDB.addItem('cafeteria.db')
@@ -406,7 +408,7 @@ class Foo(QDialog):
             self.messaging.show(message='{0} {1}'.format('Cobrat', str("%.2f" % self.lcdNumber.value())))
             self.remove_products_table()
             self.tables[self.table_id].clear()
-            self.db.insert_ticket(str(time.strftime('%d/%m/%y %H:%M:%S')),self.table_num, self.employee, float(self.lcdNumber.value()))
+            self.db.insert_ticket(str(time.strftime('%Y/%m/%d %H:%M:%S')),self.table_num, self.employee, float(self.lcdNumber.value()))
             self.db.update_ticket_number(1, self.ticket_number)
             self.reset_displays()
             #self.print_invoice()
