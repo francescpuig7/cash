@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Kaisher - Can Guix</string>
   </property>
   <widget class="QLCDNumber" name="lcdNumber">
    <property name="geometry">
@@ -338,7 +338,7 @@ QComboBox::down-arrow:on{
   <widget class="QPushButton" name="btn_llistats">
    <property name="geometry">
     <rect>
-     <x>1130</x>
+     <x>1040</x>
      <y>500</y>
      <width>91</width>
      <height>80</height>
@@ -361,7 +361,7 @@ QComboBox::down-arrow:on{
   <widget class="QPushButton" name="btn_llicencia">
    <property name="geometry">
     <rect>
-     <x>1040</x>
+     <x>1310</x>
      <y>500</y>
      <width>91</width>
      <height>80</height>
@@ -469,7 +469,7 @@ QComboBox::down-arrow:on{
   <widget class="QPushButton" name="btn_ventas">
    <property name="geometry">
     <rect>
-     <x>1220</x>
+     <x>1130</x>
      <y>500</y>
      <width>91</width>
      <height>80</height>
@@ -492,7 +492,7 @@ QComboBox::down-arrow:on{
   <widget class="QPushButton" name="btn_config">
    <property name="geometry">
     <rect>
-     <x>1310</x>
+     <x>1220</x>
      <y>500</y>
      <width>91</width>
      <height>80</height>
@@ -920,7 +920,7 @@ QProgressBar::chunk {
     </size>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QPushButton" name="btn_payments">
    <property name="geometry">
     <rect>
      <x>1160</x>
@@ -970,7 +970,7 @@ QProgressBar::chunk {
   <zorder>total_label</zorder>
   <zorder>product_box</zorder>
   <zorder>btn_tiquet_2</zorder>
-  <zorder>pushButton</zorder>
+  <zorder>btn_payments</zorder>
  </widget>
  <resources/>
  <connections/>
