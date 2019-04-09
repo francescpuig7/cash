@@ -80,6 +80,7 @@ class License(QDialog):
     def paint(self):
         self.show()
 
+
 class Sales(QDialog):
     def __init__(self, db):
         super(Sales, self).__init__()
@@ -90,11 +91,16 @@ class Sales(QDialog):
 
     def paint(self):
         if self.view == 'Dia':
-            tickets = self.db.select_ticket('day')
+            tickets = self.db.select_ticket('day', di=time.strftime('%Y/%m/%d'))
         elif self.view == 'Mes':
-            tickets = self.db.select_ticket('month')
+            month = datetime.now().month
+            year = datetime.now().year
+            last_day_of_month = calendar.monthrange(year, month)[1]
+            di = '{}/{}/01'.format(year, str(month).zfill(2))
+            df = '{}/{}/{}'.format(year, str(month).zfill(2), last_day_of_month)
+            tickets = self.db.select_ticket('month', di=di, df=df)
         elif self.view == 'Any':
-            tickets = self.db.select_ticket('year')
+            tickets = self.db.select_ticket('year', di=time.strftime('%Y'))
         elif self.view == 'Total':
             tickets = self.db.select_ticket('total')
 
