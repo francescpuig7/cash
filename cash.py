@@ -135,6 +135,7 @@ class Foo(QDialog):
         # self._ltables.append(Table(1))
         self.employee = 'No. def'
         self.table_num = 'Taula 0'
+        self.suplement_concept = 'varis'
         self.table_id = 1
         self.add_num = 1
         self.iva = 21
@@ -213,13 +214,17 @@ class Foo(QDialog):
             p = Product(row[0], row[1], row[2])
             self.products[p.name] = p
 
-            if row[2] == 'Restaurant':
+            print(row)
+            if row[2] == 'Restaurant' and row[0] == self.suplement_concept:
+                self.btn.setStyleSheet("background-color: gold;")
+                _list_btn_rest[p] = self.btn
+            elif row[2] == 'Restaurant':
                 self.btn.setStyleSheet("background-color: springgreen;")
                 _list_btn_rest[p] = self.btn
-            if row[2] == 'Bar':
+            elif row[2] == 'Bar':
                 self.btn.setStyleSheet("background-color: tomato;")
                 _list_btn_bar[p] = self.btn
-            if row[2] == 'Beguda':
+            elif row[2] == 'Beguda':
                 self.btn.setStyleSheet("background-color: gold;")
                 _list_btn_beguda[p] = self.btn
 
@@ -258,7 +263,7 @@ class Foo(QDialog):
                 height = 110
                 it = 1
                 for product, button in lbutton.items():
-                    if product.name != 'carta':
+                    if product.name != self.suplement_concept:
                         button.clicked.connect(lambda: self.set_product(product))
                     else:
                         button.clicked.connect(self.show_dialog)
@@ -404,7 +409,7 @@ class Foo(QDialog):
     def invoicing(self):
         if not self.check_license():
             self.messaging.show('Llicencia caducada', type='warning')
-            sys.exit()
+            return False
         if self.lcdNumber.value() == 0:
             self.messaging.show('No has afegit cap producte', 'warning')
         else:
@@ -467,10 +472,16 @@ class Foo(QDialog):
     def show_dialog(self):
         price, ok = QInputDialog.getText(self, 'afegir linia', 'Entra el preu:')
         if ok:
-            product = self.sender().text()
-            line = '{0} {1}'.format(str(product), str(price))
-            self.add_price(price)
-            self.set_product(line)
+            product = self.products[str(self.sender().text())]
+            price_multi = float(price) * float(self.add_num)
+            self.set_product_table(product.name, self.add_num, price_multi)
+            result = str(self.sender().text())
+            self.tables[self.table_id].append(LineProd(product.name, price_multi, self.add_num))
+            self.add_num = 1
+
+            iva = (price_multi * self.iva) / 100
+            subtotal = price_multi - iva
+            self.add_price(price_multi, subtotal, iva)
 
     def show_dialog_table(self):
         if self.tables:
