@@ -6,11 +6,13 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import calendar
 from PyQt5 import uic, QtGui
+from PyQt5.QtCore import QDate
 from PyQt5.QtWidgets import (QAbstractItemView, QApplication, QDialog, QPushButton, QTableWidgetItem, QMessageBox,
                              QLabel, QHBoxLayout, QTextEdit, QWidget, QVBoxLayout, QLineEdit, QFormLayout, QInputDialog)
 from product import Product, Menjar, Beguda
 from employee import Employee
 from utils import Utils
+from partner import Partner
 # from order import Table
 import csv
 
@@ -56,6 +58,35 @@ class Config(QDialog):
 
     def paint(self):
         self.show()
+
+class Payments(QDialog):
+    def __init__(self, partners, messaging):
+        super(Payments, self).__init__()
+        uic.loadUi('invoice.ui', self)
+        self.partners = partners
+        self.messaging = messaging
+        self.date = datetime.now()
+        self.buttonBox.accepted.connect(self.save_payment)
+        self.buttonBox.rejected.connect(self.reject)
+        self.calendar.clicked[QDate].connect(self.set_date)
+
+    def paint(self):
+        self.show()
+        for partner in self.partners:
+            self.combobox_partner.addItem(str(partner))
+
+    def save_payment(self):
+        base = float(self.label_base_imposable.text().replace(',', '.'))
+        iva = int(self.label_iva.text())
+        total = float(self.label_total.text().replace(',', '.'))
+        partner_name = self.combobox_partner.currentText()
+
+        message = 'Pagament entrat correctament: {} - {}, {}€'.format(partner_name, self.date, total)
+        self.messaging.show(message)
+
+    def set_date(self, date):
+        year, month, day = date.getDate()
+        self.date = datetime(year, month, day).strftime('%Y/%m/%d')
 
 class License(QDialog):
     def __init__(self, db, messaging):
@@ -134,7 +165,7 @@ class Foo(QDialog):
         self._lprod = list()
         self.tables = dict()
         self.products = dict()
-        # self._ltables.append(Table(1))
+        self.partners = list()
         self.employee = 'No. def'
         self.table_num = 'Taula 0'
         self.suplement_concept = 'varis'
