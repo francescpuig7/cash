@@ -103,6 +103,8 @@ class Sales(QDialog):
             tickets = self.db.select_ticket('year', di=time.strftime('%Y'))
         elif self.view == 'Total':
             tickets = self.db.select_ticket('total')
+        else:
+            return False
 
         total = 1
         self.sales_view.setRowCount(0)
@@ -145,21 +147,27 @@ class Foo(QDialog):
         self.ticket_number = self.db.select_ticket_number()
         self.sales = Sales(self.db)
         self.config = Config(self.db, self.messaging)
+        for x in range(5):
+            partner = Partner('Oliveras SL', 'A2313213' + str(x))
+            self.partners.append(partner)
+        self.payments = Payments(self.partners, self.messaging)
         self.license = License(self.db, self.messaging)
         self.initUi()
 
     def initUi(self):
         self.ui = uic.loadUi('restaurant.ui', self)
         # connect buttons
-        self.btn_ventas.clicked.connect(self.sales.paint)
+        self.btn_facturar.clicked.connect(self.invoicing)
         self.btn_obrir_taula.clicked.connect(self.show_dialog_table)
         self.btn_borrar.clicked.connect(self.delete_item)
-        self.btn_facturar.clicked.connect(self.invoicing)
-        self.btn_llicencia.clicked.connect(self.license.paint)
-        #self.btn_config.clicked.connect(self.config.login)
-        self.btn_config.clicked.connect(self.config.paint)
-        #self.btn_config.clicked.connect(self.config)
         self.btn_llistats.clicked.connect(self.llistats)
+        self.btn_ventas.clicked.connect(self.sales.paint)
+        self.btn_config.clicked.connect(self.config.paint)
+        self.btn_llicencia.clicked.connect(self.license.paint)
+        self.btn_payments.clicked.connect(self.payments.paint)
+        #self.btn_config.clicked.connect(self.config.login)
+        #self.btn_config.clicked.connect(self.config)
+
         self.connect_buttons_calc()
         self.comboBox_selectDB.addItem('restaurant.db')
         self.comboBox_selectDB.addItem('cafeteria.db')
@@ -588,7 +596,11 @@ class Foo(QDialog):
                 )
 
     def check_license(self):
-        code, dt = self.db.select_license()
+        try:
+            code, dt = self.db.select_license()
+        except:
+            self.messaging.show('Llicencia no activada')
+            return False
         u = Utils()
         if u.check_code(code) and u.check_license(code, dt):
             return True
@@ -650,6 +662,21 @@ class Db:
         self.conn.commit()
         self.cursor.execute('''Create table if not exists llicencia(code, timestamp)''')
         self.conn.commit()
+        self.cursor.execute('''Create table if not exists taula(id)''')
+        self.conn.commit()
+        self.cursor.execute('''Create table if not exists empleat(id, name, password)''')
+        self.init_db()
+
+    def init_db(self):
+        employees = [x for x in self.cursor.execute('''select * from empleat''')]
+        tables = [x for x in self.cursor.execute('''select * from taula''')]
+        if not employees:
+            _values = [(1, 'Empleat 1', 'No')]
+            self.cursor.executemany('Insert into empleat values (?, ?, ?)', _values)
+            self.conn.commit()
+        if not tables:
+            self.insert_tables()
+
 
     def insert(self, name, price):
         _values = [(name, price)]
@@ -668,8 +695,13 @@ class Db:
         self.cursor.executemany('Insert into llicencia values (?, ?)', _values)
         self.conn.commit()
 
+    def insert_tables(self):
+        for i in range(1, 5):
+            self.cursor.execute('Insert into taula values ({0})'.format(i))
+            self.conn.commit()
+
     def update_ticket_number(self, id, number):
-        self.cursor.execute('Update ticket_number set number={0} where id={1}'.format(id, number))
+        self.cursor.execute('Update ticket_number set number={0} where id={1}'.format(number, id))
         self.conn.commit()
 
     def select(self):
@@ -685,40 +717,48 @@ class Db:
         return _table
 
     def select_ticket_number(self):
+        row = [1]
         for row in self.cursor.execute('''select number from ticket_number where id=1'''):
             print(row)
         return row[0]
 
     def select_employees(self):
-        #_values = [(3, 'Francesc','no')]
-        #self.cursor.executemany('Insert into empleat values (?, ?, ?)', _values)
         self.conn.commit()
         _employee = list()
         for row in self.cursor.execute('''select * from empleat'''):
             _employee.append(row)
         return _employee
 
-    def select_ticket(self, option):
+    def select_ticket(self, option, di=None, df=None):
         _ticket = list()
         if option == 'total':
             for row in self.cursor.execute('''select * from ticket'''):
                 _ticket.append(row)
         elif option == 'year':
-            year = time.strftime('/%y ')
-            query = '{0}{1}{2}'.format("select * from ticket where id like '%", year, "%'")
-            for row in self.cursor.execute('''select * from ticket'''):
+            di += '%'
+            for row in self.cursor.execute("select * from ticket where id like :di", {"di": di}):
                 _ticket.append(row)
         elif option == 'month':
             month = time.strftime('/%m/')
-            query = '{0}{1}{2}'.format("select * from ticket where id like '%", month, "%'")
-            for row in self.cursor.execute(query):
+            for row in self.cursor.execute("select * from ticket where id >=:di and id <=:df", {"di": di, "df": df}):
                 _ticket.append(row)
         elif option == 'day':
-            day = time.strftime('%d/')
-            query = '{0}{1}{2}'.format("select * from ticket where id like '", day, "%'")
-            for row in self.cursor.execute(query):
+            di += '%'
+            for row in self.cursor.execute("select * from ticket where id like :di", {"di": di}):
                 _ticket.append(row)
         return _ticket
+
+    def select_sell_by_dates(self, di, df):
+        inform = list()
+        for row in self.cursor.execute("select * from ticket where id >=:di and id <=:df", {"di": di, "df": df}):
+            inform.append(row)
+        return inform
+
+    def select_sell_by_import(self, price):
+        inform = list()
+        for row in self.cursor.execute("select * from ticket where total >=:price", {"price": price}):
+            inform.append(row)
+        return inform
 
     def select_license(self):
         _license = list()
