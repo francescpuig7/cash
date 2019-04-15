@@ -60,33 +60,53 @@ class Config(QDialog):
         self.show()
 
 class Payments(QDialog):
-    def __init__(self, partners, messaging):
+    def __init__(self, partners, messaging, db):
         super(Payments, self).__init__()
         uic.loadUi('invoice.ui', self)
         self.partners = partners
         self.messaging = messaging
+        self.db = db
         self.date = datetime.now()
         self.buttonBox.accepted.connect(self.save_payment)
         self.buttonBox.rejected.connect(self.reject)
         self.calendar.clicked[QDate].connect(self.set_date)
+        for partner in sorted(self.partners):
+            self.combobox_partner.addItem(str(partner))
 
     def paint(self):
         self.show()
-        for partner in self.partners:
-            self.combobox_partner.addItem(str(partner))
+        self.date_calendar = None
 
     def save_payment(self):
         base = float(self.label_base_imposable.text().replace(',', '.'))
-        iva = int(self.label_iva.text())
+        # todo: set default date
+        iva = int(str(self.combobox_iva.currentText()).replace('%', ''))
+
         total = float(self.label_total.text().replace(',', '.'))
         partner_name = self.combobox_partner.currentText()
+        number = self.label_invoice_number.text()
+        if not self.date_calendar:
+            self.date_calendar = self.date.strftime('%Y/%m/%d')
+        if base == 0.0 or iva == 0 or total == 0.0:
+            self.messaging.show(message='No has entrat les dades correctament', type='warning')
+            return False
+
+        self.db.insert_sell(self.date_calendar, partner_name, number, base, iva, total)
 
         message = 'Pagament entrat correctament: {} - {}, {}€'.format(partner_name, self.date, total)
         self.messaging.show(message)
+        self.reset_values()
 
     def set_date(self, date):
         year, month, day = date.getDate()
-        self.date = datetime(year, month, day).strftime('%Y/%m/%d')
+        self.date_calendar = datetime(year, month, day).strftime('%Y/%m/%d')
+
+    def reset_values(self):
+        self.label_invoice_number.setText('')
+        self.label_total.setValue(0.0)
+        self.label_base_imposable.setValue(0.0)
+        self.combobox_iva.setCurrentIndex(1)
+        self.combobox_partner.setCurrentIndex(1)
 
 class License(QDialog):
     def __init__(self, db, messaging):
@@ -178,10 +198,11 @@ class Foo(QDialog):
         self.ticket_number = self.db.select_ticket_number()
         self.sales = Sales(self.db)
         self.config = Config(self.db, self.messaging)
-        for x in range(5):
-            partner = Partner('Oliveras SL', 'A2313213' + str(x))
+        row = self.db.select_partner()
+        for x in row:
+            partner = Partner(name=x[1], cif=x[0])
             self.partners.append(partner)
-        self.payments = Payments(self.partners, self.messaging)
+        self.payments = Payments(self.partners, self.messaging, self.db)
         self.license = License(self.db, self.messaging)
         self.initUi()
 
@@ -695,7 +716,12 @@ class Db:
         self.conn.commit()
         self.cursor.execute('''Create table if not exists taula(id)''')
         self.conn.commit()
+        self.cursor.execute('''Create table if not exists proveidor(nif, name, grup)''')
+        self.conn.commit()
         self.cursor.execute('''Create table if not exists empleat(id, name, password)''')
+        self.conn.commit()
+        self.cursor.execute('''Create table if not exists sell(id, partner, number, base, iva, total)''')
+        self.conn.commit()
         self.init_db()
 
     def init_db(self):
@@ -708,7 +734,6 @@ class Db:
         if not tables:
             self.insert_tables()
 
-
     def insert(self, name, price):
         _values = [(name, price)]
         self.cursor.executemany('Insert into producte values (?, ?)', _values)
@@ -717,6 +742,11 @@ class Db:
     def insert_ticket(self, num, num_table, employee, total):
         _values = [(num, num_table, employee, total)]
         self.cursor.executemany('Insert into ticket values (?, ?, ?, ?)', _values)
+        self.conn.commit()
+
+    def insert_sell(self, num, partner, number, base, iva, total):
+        _values = [(num, partner, number, base, iva, total)]
+        self.cursor.executemany('Insert into sell values (?, ?, ?, ?, ?, ?)', _values)
         self.conn.commit()
 
     def insert_license(self, code, dt):
@@ -796,6 +826,12 @@ class Db:
         for row in self.cursor.execute('''select code, timestamp from llicencia'''):
             _license.append(row)
         return _license[0]
+
+    def select_partner(self):
+        _partner = list()
+        for row in self.cursor.execute('''select * from proveidor'''):
+            _partner.append(row)
+        return _partner
 
 class Message:
 
