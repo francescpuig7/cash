@@ -121,7 +121,7 @@ class License(QDialog):
         code = self.license_box.text()
         u = Utils()
         if u.check_code(code):
-            dt = (datetime.now() + relativedelta(years=1)).strftime('%d-%m-%Y')
+            dt = (datetime.now() + relativedelta(years=1)).strftime('%Y/%m/%d')
             self.db.insert_license(code, dt)
             self.messaging.show('Llicencia activada')
         else:
@@ -657,7 +657,7 @@ class Foo(QDialog):
         if u.check_code(code) and u.check_license(code, dt):
             return True
         else:
-            sys.exit()
+            self.messaging.show('Llicencia no activada')
             return False
 
     def config(self):
