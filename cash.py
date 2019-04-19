@@ -20,7 +20,7 @@ import csv
 class Login(QDialog):
     def __init__(self):
         super(Login, self).__init__()
-        uic.loadUi('login.ui', self)
+        uic.loadUi('./templates/login.ui', self)
         self.buttonBox.accepted.connect(self.accept)
         self.show()
 
@@ -36,7 +36,7 @@ class Login(QDialog):
 class Config(QDialog):
     def __init__(self, db, messaging):
         super(Config, self).__init__()
-        uic.loadUi('config.ui', self)
+        uic.loadUi('./templates/config.ui', self)
         self.db = db
         self.messaging = messaging
         self.save_button.clicked.connect(self.save_product)
@@ -81,7 +81,7 @@ class Payments(QDialog):
 
     def __init__(self, partners, messaging, db):
         super(Payments, self).__init__()
-        uic.loadUi('invoice.ui', self)
+        uic.loadUi('./templates/invoice.ui', self)
         self.partners = partners
         self.messaging = messaging
         self.db = db
@@ -134,7 +134,7 @@ class Payments(QDialog):
 class License(QDialog):
     def __init__(self, db, messaging):
         super(License, self).__init__()
-        uic.loadUi('license.ui', self)
+        uic.loadUi('./templates/license.ui', self)
         self.db = db
         self.messaging = messaging
         self.buttonBox.accepted.connect(self.activate_license)
@@ -158,7 +158,7 @@ class License(QDialog):
 class Sales(QDialog):
     def __init__(self, db):
         super(Sales, self).__init__()
-        uic.loadUi('extracts.ui', self)
+        uic.loadUi('./templates/extracts.ui', self)
         self.db = db
         self.view = 'Dia'
         self.comboBox_select_result.currentIndexChanged['QString'].connect(self.change_default_view)
