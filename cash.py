@@ -60,6 +60,25 @@ class Config(QDialog):
         self.show()
 
 class Payments(QDialog):
+
+    GROUPS = {
+        1: "COMPRES",
+        2: "ADQUISICIONS INTRACOM.",
+        3: "BENS D'INVERSIÓ",
+        4: "SOUS I SALARIS",
+        5: "SEG. SOCIAL",
+        6: "AUTONOMS",
+        7: "TREBALLS ALTRE EMPRESES",
+        8: "PRIMES ASSEGURANCES",
+        9: "TRIBUTS I TAXES",
+        10: "ALTRES DESPESES",
+        11: "REPARACIONS/MANTENIMENT",
+        12: "AMORTITZACIONS",
+        13: "SUBMINISTRAMENTS",
+        14: "SERVEIS PROFESSIONALS",
+        15: "ALTRES SERVEIS"
+    }
+
     def __init__(self, partners, messaging, db):
         super(Payments, self).__init__()
         uic.loadUi('invoice.ui', self)
@@ -72,6 +91,8 @@ class Payments(QDialog):
         self.calendar.clicked[QDate].connect(self.set_date)
         for partner in sorted(self.partners):
             self.combobox_partner.addItem(str(partner))
+        for group in self.GROUPS.values():
+            self.combobox_group.addItem(group)
 
     def paint(self):
         self.show()
@@ -84,6 +105,7 @@ class Payments(QDialog):
 
         total = float(self.label_total.text().replace(',', '.'))
         partner_name = self.combobox_partner.currentText()
+        group = self.combobox_group.currentText()
         number = self.label_invoice_number.text()
         if not self.date_calendar:
             self.date_calendar = self.date.strftime('%Y/%m/%d')
@@ -91,7 +113,7 @@ class Payments(QDialog):
             self.messaging.show(message='No has entrat les dades correctament', type='warning')
             return False
 
-        self.db.insert_sell(self.date_calendar, partner_name, number, base, iva, total)
+        self.db.insert_sell(self.date_calendar, partner_name, group, number, base, iva, total)
 
         message = 'Pagament entrat correctament: {} - {}, {}€'.format(partner_name, self.date, total)
         self.messaging.show(message)
@@ -107,6 +129,7 @@ class Payments(QDialog):
         self.label_base_imposable.setValue(0.0)
         self.combobox_iva.setCurrentIndex(1)
         self.combobox_partner.setCurrentIndex(1)
+        self.combobox_group.setCurrentIndex(1)
 
 class License(QDialog):
     def __init__(self, db, messaging):
@@ -217,6 +240,7 @@ class Foo(QDialog):
         self.btn_config.clicked.connect(self.config.paint)
         self.btn_llicencia.clicked.connect(self.license.paint)
         self.btn_payments.clicked.connect(self.payments.paint)
+        self.btn_cancel_ticket.clicked.connect(self.cancel_ticket)
         #self.btn_config.clicked.connect(self.config.login)
         #self.btn_config.clicked.connect(self.config)
 
@@ -720,7 +744,7 @@ class Db:
         self.conn.commit()
         self.cursor.execute('''Create table if not exists empleat(id, name, password)''')
         self.conn.commit()
-        self.cursor.execute('''Create table if not exists sell(id, partner, number, base, iva, total)''')
+        self.cursor.execute('''Create table if not exists sell(id, partner, grup, number, base, iva, total)''')
         self.conn.commit()
         self.init_db()
 
@@ -744,9 +768,9 @@ class Db:
         self.cursor.executemany('Insert into ticket values (?, ?, ?, ?)', _values)
         self.conn.commit()
 
-    def insert_sell(self, num, partner, number, base, iva, total):
-        _values = [(num, partner, number, base, iva, total)]
-        self.cursor.executemany('Insert into sell values (?, ?, ?, ?, ?, ?)', _values)
+    def insert_sell(self, num, partner, group, number, base, iva, total):
+        _values = [(num, partner, group, number, base, iva, total)]
+        self.cursor.executemany('Insert into sell values (?, ?, ?, ?, ?, ?, ?)', _values)
         self.conn.commit()
 
     def insert_license(self, code, dt):
