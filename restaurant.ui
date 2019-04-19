@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Kaisher - Can Guix</string>
+   <string>Dialog</string>
   </property>
   <widget class="QLCDNumber" name="lcdNumber">
    <property name="geometry">

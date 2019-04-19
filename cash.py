@@ -15,6 +15,7 @@ from utils import Utils
 from partner import Partner
 # from order import Table
 import csv
+import configparser
 
 
 class Login(QDialog):
@@ -231,6 +232,7 @@ class Foo(QDialog):
 
     def initUi(self):
         self.ui = uic.loadUi('restaurant.ui', self)
+        self.read_config_file()
         # connect buttons
         self.btn_facturar.clicked.connect(self.invoicing)
         self.btn_obrir_taula.clicked.connect(self.show_dialog_table)
@@ -688,6 +690,13 @@ class Foo(QDialog):
         else:
             self.messaging.show('Llicencia no activada')
             return False
+
+    def read_config_file(self):
+        parser = configparser.ConfigParser()
+        base_path = './configs/'
+        parser.read(base_path + '/config.cfg')
+        name = parser.items('NAME')[0][1]
+        self.setWindowTitle('Kaisher - {}'.format(name))
 
     def config(self):
         dialog = QDialog()
