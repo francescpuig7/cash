@@ -47,10 +47,10 @@
    <widget class="QComboBox" name="combobox_partner">
     <property name="geometry">
      <rect>
-      <x>150</x>
+      <x>140</x>
       <y>10</y>
-      <width>441</width>
-      <height>35</height>
+      <width>451</width>
+      <height>30</height>
      </rect>
     </property>
     <property name="font">
@@ -65,7 +65,12 @@
      <bool>false</bool>
     </property>
     <property name="styleSheet">
-     <string notr="true"/>
+     <string notr="true">QComboBox {
+    border: 1px solid gray;
+    border-radius: 3px;
+    padding: 1px 18px 1px 3px;
+    min-width: 6em;
+}</string>
     </property>
     <property name="maxVisibleItems">
      <number>15</number>
@@ -147,11 +152,17 @@
     <property name="horizontalHeaderFormat">
      <enum>QCalendarWidget::ShortDayNames</enum>
     </property>
+    <property name="navigationBarVisible">
+     <bool>true</bool>
+    </property>
+    <property name="dateEditEnabled">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
-      <x>470</x>
+      <x>450</x>
       <y>60</y>
       <width>61</width>
       <height>31</height>
@@ -226,11 +237,28 @@
    <widget class="QComboBox" name="combobox_iva">
     <property name="geometry">
      <rect>
-      <x>520</x>
+      <x>510</x>
       <y>60</y>
-      <width>71</width>
-      <height>27</height>
+      <width>80</width>
+      <height>30</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>17</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QComboBox {
+    border: 1px solid gray;
+    border-radius: 3px;
+}</string>
+    </property>
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <property name="maxVisibleItems">
+     <number>5</number>
     </property>
     <item>
      <property name="text">
@@ -254,14 +282,27 @@
       <x>450</x>
       <y>110</y>
       <width>141</width>
-      <height>27</height>
+      <height>30</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>17</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QComboBox {
+    border: 1px solid gray;
+    border-radius: 3px;
+    padding: 1px 18px 1px 3px;
+    min-width: 6em;
+}</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_6">
     <property name="geometry">
      <rect>
-      <x>370</x>
+      <x>360</x>
       <y>110</y>
       <width>71</width>
       <height>31</height>
