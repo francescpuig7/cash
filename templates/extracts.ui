@@ -58,16 +58,6 @@
      <string>Total</string>
     </property>
    </item>
-   <item>
-    <property name="text">
-     <string>Total Dia</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>Total Mes</string>
-    </property>
-   </item>
   </widget>
   <widget class="QTableWidget" name="sales_view">
    <property name="geometry">

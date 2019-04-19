@@ -297,18 +297,20 @@ class Foo(QDialog):
         for x in row:
             partner = Partner(name=x[1], cif=x[0])
             self.partners.append(partner)
+        self.read_config_file()
         self.payments = Payments(self.partners, self.messaging, self.db)
         self.license = License(self.db, self.messaging)
+        self.listing = Listing(self.db, self.messaging, self.iva, self.listing_path)
         self.initUi()
 
     def initUi(self):
         self.ui = uic.loadUi('restaurant.ui', self)
-        self.read_config_file()
+
         # connect buttons
         self.btn_facturar.clicked.connect(self.invoicing)
         self.btn_obrir_taula.clicked.connect(self.show_dialog_table)
         self.btn_borrar.clicked.connect(self.delete_item)
-        self.btn_llistats.clicked.connect(self.llistats)
+        self.btn_llistats.clicked.connect(self.listing.paint)
         self.btn_ventas.clicked.connect(self.sales.paint)
         self.btn_config.clicked.connect(self.config.paint)
         self.btn_llicencia.clicked.connect(self.license.paint)
@@ -732,9 +734,6 @@ class Foo(QDialog):
         else:
             self.add_num = num
 
-    def llistats(self):
-        print('pass')
-
     def check_license(self):
         try:
             code, dt = self.db.select_license()
@@ -752,8 +751,13 @@ class Foo(QDialog):
         parser = configparser.ConfigParser()
         base_path = './configs/'
         parser.read(base_path + '/config.cfg')
-        name = parser.items('NAME')[0][1]
-        self.setWindowTitle('Kaisher - {}'.format(name))
+        try:
+            name = parser.items('NAME')[0][1]
+            self.listing_path = parser.items('PATH')[0][1]
+            self.setWindowTitle('Kaisher - {}'.format(name))
+        except configparser.NoSectionError:
+            self.listing_path = str(os.environ['HOME'])
+            self.setWindowTitle('Kaisher')
 
     def config(self):
         dialog = QDialog()
