@@ -16,6 +16,7 @@ from partner import Partner
 # from order import Table
 import csv
 import configparser
+from subprocess import Popen
 
 
 class Login(QDialog):
@@ -132,6 +133,75 @@ class Payments(QDialog):
         self.combobox_partner.setCurrentIndex(1)
         self.combobox_group.setCurrentIndex(1)
 
+
+class Listing(QDialog):
+
+    def __init__(self, db, messaging, iva, listing_path):
+        super(Listing, self).__init__()
+        uic.loadUi('./templates/listing.ui', self)
+        self.db = db
+        self.iva = iva
+        self.listing_path = listing_path
+
+        self.btn_payments_monthly.clicked.connect(self.gen_report_dates)
+        self.btn_payments_dates.clicked.connect(self.gen_report_dates)
+        self.btn_payments_price.clicked.connect(self.gen_report_dates)
+        self.btn_incomes_monthly.clicked.connect(self.gen_report_monthly_incomes)
+        self.btn_incomes_dates.clicked.connect(self.gen_report_price_incomes)
+        self.btn_incomes_price.clicked.connect(self.gen_report_price_incomes)
+
+    def gen_report_dates(self):
+        pass
+
+    def gen_report_monthly_incomes(self):
+        month = datetime.now().month
+        year = datetime.now().year
+        last_day_of_month = calendar.monthrange(year, month)[1]
+        di = '{}/{}/01'.format(year, str(month).zfill(2))
+        df = '{}/{}/{}'.format(year, str(month).zfill(2), last_day_of_month)
+        data = self.db.select_ticket('month', di=di, df=df)
+        self.write_file(data)
+
+    def gen_report_price_incomes(self):
+        price = 100
+        data = self.db.select_sell_by_import(price)
+        self.write_file(data)
+
+    def gen_report_dates_incomes(self):
+        di = ''
+        df = ''
+        data = self.db.select_sell_by_import(di, df)
+        self.write_file(data)
+
+    @property
+    def filename(self):
+        _file = '{}/{}_{}.csv'.format(self.listing_path, 'llistat', datetime.now().strftime('%Y%m%d_%H_%M_%S'))
+        return _file
+
+    def write_file(self, data):
+        with open(self.filename, 'w') as f:
+            f.write('CONCEPTE;DIA;% IVA;IVA;SUBTOTAL;TOTAL;\n')
+            for row in data:
+                taula = row[1]
+                if taula == 'Taula  4':
+                    concepte = 'VARIS BARRA'
+                else:
+                    concepte = 'VARIS TAULA'
+                iva = (float(row[3]) * self.iva) / 100
+                subtotal = float(row[3]) - iva
+                f.write('{};{};{};{};{};{};\n'.format(
+                    concepte, row[0], self.iva, "%.2f" % iva, "%.2f" % subtotal, "%.2f" % row[3])
+                )
+        try:
+            Popen(self.filename, shell=True)
+        except Exception as err:
+            print(err)
+            pass
+
+    def paint(self):
+        self.show()
+
+
 class License(QDialog):
     def __init__(self, db, messaging):
         super(License, self).__init__()
@@ -213,6 +283,7 @@ class Foo(QDialog):
         self.employee = 'No. def'
         self.table_num = 'Taula 0'
         self.suplement_concept = 'varis'
+        self.listing_path = str(os.environ['HOME'])
         self.table_id = 1
         self.add_num = 1
         self.iva = 21
@@ -662,21 +733,7 @@ class Foo(QDialog):
             self.add_num = num
 
     def llistats(self):
-        data = self.db.select_ticket(option='month')
-        print(data)
-        with open('/Users/puig/Desktop/llistat.csv', 'w') as f:
-            f.write('CONCEPTE;DIA;% IVA;IVA;SUBTOTAL;TOTAL;\n')
-            for row in data:
-                taula = row[1]
-                if taula == 'Taula  4':
-                    concepte = 'Barra'
-                else:
-                    concepte = 'Ingres - apat'
-                iva = (float(row[3]) * self.iva) / 100
-                subtotal = float(row[3]) - iva
-                f.write('{};{};{};{};{};{};\n'.format(
-                    concepte, row[0], self.iva, "%.2f" % iva, "%.2f" % subtotal, "%.2f" % row[3])
-                )
+        print('pass')
 
     def check_license(self):
         try:
