@@ -471,6 +471,11 @@ class Foo(QDialog):
                 self.recalc_price()
                 break
 
+    def cancel_ticket(self):
+        self.remove_products_table()
+        self.reset_displays()
+        self.tables[self.table_id] = []
+
     def recalc_price(self):
         total = 0
         for product in self.tables[self.table_id]:

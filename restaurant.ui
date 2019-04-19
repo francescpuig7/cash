@@ -901,7 +901,7 @@ QProgressBar::chunk {
     </attribute>
    </widget>
   </widget>
-  <widget class="QPushButton" name="btn_tiquet_2">
+  <widget class="QPushButton" name="btn_cancel_ticket">
    <property name="geometry">
     <rect>
      <x>1160</x>
@@ -1002,7 +1002,7 @@ QProgressBar::chunk {
   <zorder>iva_label</zorder>
   <zorder>total_label</zorder>
   <zorder>product_box</zorder>
-  <zorder>btn_tiquet_2</zorder>
+  <zorder>btn_cancel_ticket</zorder>
   <zorder>btn_payments</zorder>
   <zorder>btn_llicencia_2</zorder>
  </widget>
