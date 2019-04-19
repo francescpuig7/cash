@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Kaisher - Can Guix</string>
   </property>
   <widget class="QLCDNumber" name="lcdNumber">
    <property name="geometry">
@@ -102,7 +102,7 @@
    <property name="geometry">
     <rect>
      <x>1160</x>
-     <y>580</y>
+     <y>660</y>
      <width>181</width>
      <height>27</height>
     </rect>
@@ -335,10 +335,10 @@ QComboBox::down-arrow:on{
     <string>0</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="btn_caixa">
+  <widget class="QPushButton" name="btn_llistats">
    <property name="geometry">
     <rect>
-     <x>1130</x>
+     <x>1040</x>
      <y>500</y>
      <width>91</width>
      <height>80</height>
@@ -361,7 +361,7 @@ QComboBox::down-arrow:on{
   <widget class="QPushButton" name="btn_llicencia">
    <property name="geometry">
     <rect>
-     <x>1040</x>
+     <x>1310</x>
      <y>500</y>
      <width>91</width>
      <height>80</height>
@@ -469,7 +469,7 @@ QComboBox::down-arrow:on{
   <widget class="QPushButton" name="btn_ventas">
    <property name="geometry">
     <rect>
-     <x>1220</x>
+     <x>1130</x>
      <y>500</y>
      <width>91</width>
      <height>80</height>
@@ -492,7 +492,7 @@ QComboBox::down-arrow:on{
   <widget class="QPushButton" name="btn_config">
    <property name="geometry">
     <rect>
-     <x>1310</x>
+     <x>1220</x>
      <y>500</y>
      <width>91</width>
      <height>80</height>
@@ -516,7 +516,7 @@ QComboBox::down-arrow:on{
    <property name="geometry">
     <rect>
      <x>1160</x>
-     <y>620</y>
+     <y>690</y>
      <width>181</width>
      <height>27</height>
     </rect>
@@ -827,7 +827,7 @@ p, li { white-space: pre-wrap; }
     <enum>QTabWidget::North</enum>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>1</number>
    </property>
    <property name="iconSize">
     <size>
@@ -901,7 +901,7 @@ QProgressBar::chunk {
     </attribute>
    </widget>
   </widget>
-  <widget class="QPushButton" name="btn_tiquet_2">
+  <widget class="QPushButton" name="btn_cancel_ticket">
    <property name="geometry">
     <rect>
      <x>1160</x>
@@ -920,17 +920,50 @@ QProgressBar::chunk {
     </size>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QPushButton" name="btn_payments">
    <property name="geometry">
     <rect>
-     <x>1160</x>
-     <y>680</y>
-     <width>110</width>
-     <height>32</height>
+     <x>1310</x>
+     <y>580</y>
+     <width>91</width>
+     <height>80</height>
     </rect>
    </property>
    <property name="text">
-    <string>Tancar Caixa</string>
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>icons/banker.png</normaloff>icons/banker.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>50</width>
+     <height>50</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_llicencia_2">
+   <property name="geometry">
+    <rect>
+     <x>1220</x>
+     <y>580</y>
+     <width>91</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>icons/033-bill.png</normaloff>icons/033-bill.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>50</width>
+     <height>50</height>
+    </size>
    </property>
   </widget>
   <zorder>lcdNumber</zorder>
@@ -954,7 +987,7 @@ QProgressBar::chunk {
   <zorder>comboBox_selectEmployee</zorder>
   <zorder>btn_ventas_2</zorder>
   <zorder>btn_facturar</zorder>
-  <zorder>btn_caixa</zorder>
+  <zorder>btn_llistats</zorder>
   <zorder>btn_llicencia</zorder>
   <zorder>btn_ventas</zorder>
   <zorder>btn_config</zorder>
@@ -969,8 +1002,9 @@ QProgressBar::chunk {
   <zorder>iva_label</zorder>
   <zorder>total_label</zorder>
   <zorder>product_box</zorder>
-  <zorder>btn_tiquet_2</zorder>
-  <zorder>pushButton</zorder>
+  <zorder>btn_cancel_ticket</zorder>
+  <zorder>btn_payments</zorder>
+  <zorder>btn_llicencia_2</zorder>
  </widget>
  <resources/>
  <connections/>

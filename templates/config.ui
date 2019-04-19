@@ -124,10 +124,10 @@
     </rect>
    </property>
    <property name="text">
-    <string>Cateforía</string>
+    <string>Categoría</string>
    </property>
   </widget>
-  <widget class="QComboBox" name="type">
+  <widget class="QComboBox" name="checkbox_categoria">
    <property name="geometry">
     <rect>
      <x>100</x>

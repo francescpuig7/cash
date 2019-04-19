@@ -1,7 +1,46 @@
-MENU DIARI,10
-VI NEGRE,3
-CAFE,2
-SUC NATURAL,2
-PA,1
-AIGUA,1
-PURET REIG,2
+varis,0,Restaurant
+menu diari,10.0,Restaurant
+aigua,1.90,Bar
+cafe amb llet,2,Bar
+pa,2,Restaurant
+vi,3,Restaurant
+copa conyac,5,Bar
+puret reig,0.15,Bar
+puret minor,0.35,Bar
+refresc,2,Bar
+cafe,1.50,Bar
+canya,2,Bar
+estrella,1.90,Bar
+alhambra,2.20,Bar
+gintonic basic,5,Bar
+gintonic premium,8,Bar
+copa cardhu,15,Bar
+cubata,6,Bar
+suplement postres,2,Restaurant
+suplement pa,1,Restaurant
+cobert,2,Restaurant
+patates bossa,1.50,Bar
+cargols,4,Restaurant
+amanida,3,Restaurant
+sopa llegums,5,Restaurant
+bistec,13.90,Restaurant
+arros negre,3,Restaurant
+copa vi blanc,3,Bar
+suc taronja,3,Restaurant
+ou kinder,1,Restaurant
+arros cubana,5,Restaurant
+tallarines,3,Restaurant
+espaguetis,3,Restaurant
+pizza,10,Restaurant
+pollo verdures,2,Restaurant
+truita patates,3,Restaurant
+pollo,2,Restaurant
+patates suc,3,Restaurant
+hamburguesa,5,Restaurant
+filet,5,Restaurant
+graellada,5,Restaurant
+truita ceba,5,Restaurant
+truita formatge,5,Restaurant
+amanida,3,Restaurant
+amanida casa,3,Restaurant
+amanida cesar,2,Restaurant
