@@ -18,11 +18,15 @@ import csv
 import configparser
 from subprocess import Popen
 
+TEMPLATES = os.path.join(
+    os.path.dirname(os.path.realpath(__file__)), 'templates'
+)
+
 
 class Login(QDialog):
     def __init__(self):
         super(Login, self).__init__()
-        uic.loadUi('./templates/login.ui', self)
+        uic.loadUi(TEMPLATES + '/login.ui', self)
         self.buttonBox.accepted.connect(self.accept)
         self.show()
 
@@ -38,7 +42,7 @@ class Login(QDialog):
 class Config(QDialog):
     def __init__(self, db, messaging):
         super(Config, self).__init__()
-        uic.loadUi('./templates/config.ui', self)
+        uic.loadUi(TEMPLATES + '/config.ui', self)
         self.db = db
         self.messaging = messaging
         self.save_button.clicked.connect(self.save_product)
@@ -83,7 +87,7 @@ class Payments(QDialog):
 
     def __init__(self, partners, messaging, db):
         super(Payments, self).__init__()
-        uic.loadUi('./templates/invoice.ui', self)
+        uic.loadUi(TEMPLATES + '/invoice.ui', self)
         self.partners = partners
         self.messaging = messaging
         self.db = db
@@ -229,7 +233,7 @@ class Listing(QDialog):
 class License(QDialog):
     def __init__(self, db, messaging):
         super(License, self).__init__()
-        uic.loadUi('./templates/license.ui', self)
+        uic.loadUi(TEMPLATES + '/license.ui', self)
         self.db = db
         self.messaging = messaging
         self.buttonBox.accepted.connect(self.activate_license)
@@ -253,7 +257,7 @@ class License(QDialog):
 class Sales(QDialog):
     def __init__(self, db):
         super(Sales, self).__init__()
-        uic.loadUi('./templates/extracts.ui', self)
+        uic.loadUi(TEMPLATES + '/extracts.ui', self)
         self.db = db
         self.view = 'Dia'
         self.comboBox_select_result.currentIndexChanged['QString'].connect(self.change_default_view)
