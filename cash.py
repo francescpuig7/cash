@@ -115,7 +115,7 @@ class Payments(QDialog):
             self.messaging.show(message='No has entrat les dades correctament', type='warning')
             return False
 
-        self.db.insert_sell(self.date_calendar, partner_name, group, number, base, iva, total)
+        self.db.insert_payment(self.date_calendar, partner_name, group, number, base, iva, total)
 
         message = 'Pagament entrat correctament: {} - {}, {}€'.format(partner_name, self.date, total)
         self.messaging.show(message)
@@ -138,65 +138,89 @@ class Listing(QDialog):
 
     def __init__(self, db, messaging, iva, listing_path):
         super(Listing, self).__init__()
-        uic.loadUi('./templates/listing.ui', self)
+        uic.loadUi(TEMPLATES + '/listing.ui', self)
         self.db = db
         self.iva = iva
         self.listing_path = listing_path
+        self.price = 0
 
         self.btn_payments_monthly.clicked.connect(self.gen_report_dates)
         self.btn_payments_dates.clicked.connect(self.gen_report_dates)
-        self.btn_payments_price.clicked.connect(self.gen_report_dates)
-        self.btn_incomes_monthly.clicked.connect(self.gen_report_monthly_incomes)
-        self.btn_incomes_dates.clicked.connect(self.gen_report_price_incomes)
-        self.btn_incomes_price.clicked.connect(self.gen_report_price_incomes)
+        self.btn_payments_price.clicked.connect(self.gen_report_price_payments)
+        self.btn_sells_monthly.clicked.connect(self.gen_report_monthly_sells)
+        self.btn_sells_dates.clicked.connect(self.gen_report_price_sells)
+        self.btn_sells_price.clicked.connect(self.gen_report_price_sells)
 
     def gen_report_dates(self):
         pass
 
-    def gen_report_monthly_incomes(self):
+    def gen_report_monthly_sells(self):
         month = datetime.now().month
         year = datetime.now().year
         last_day_of_month = calendar.monthrange(year, month)[1]
         di = '{}/{}/01'.format(year, str(month).zfill(2))
         df = '{}/{}/{}'.format(year, str(month).zfill(2), last_day_of_month)
         data = self.db.select_ticket('month', di=di, df=df)
-        self.write_file(data)
+        self.write_file(data, 'ingressos')
 
-    def gen_report_price_incomes(self):
-        price = 100
-        data = self.db.select_sell_by_import(price)
-        self.write_file(data)
+    def gen_report_price_sells(self):
+        self.price = 0
+        self.show_dialog_price()
+        data = self.db.select_sell_by_import(self.price)
+        self.write_file(data, 'ingressos')
 
-    def gen_report_dates_incomes(self):
+    def gen_report_dates_sells(self):
         di = ''
         df = ''
         data = self.db.select_sell_by_import(di, df)
-        self.write_file(data)
+        self.write_file(data, 'ingressos')
+
+    def gen_report_price_payments(self):
+        self.price = 0
+        self.show_dialog_price()
+        data = self.db.select_payments_by_import(self.price)
+        self.write_file(data, 'gastos')
 
     @property
     def filename(self):
         _file = '{}/{}_{}.csv'.format(self.listing_path, 'llistat', datetime.now().strftime('%Y%m%d_%H_%M_%S'))
         return _file
 
-    def write_file(self, data):
-        with open(self.filename, 'w') as f:
-            f.write('CONCEPTE;DIA;% IVA;IVA;SUBTOTAL;TOTAL;\n')
-            for row in data:
-                taula = row[1]
-                if taula == 'Taula  4':
-                    concepte = 'VARIS BARRA'
-                else:
-                    concepte = 'VARIS TAULA'
-                iva = (float(row[3]) * self.iva) / 100
-                subtotal = float(row[3]) - iva
-                f.write('{};{};{};{};{};{};\n'.format(
-                    concepte, row[0], self.iva, "%.2f" % iva, "%.2f" % subtotal, "%.2f" % row[3])
-                )
+    def write_file(self, data, _type):
+        if _type == 'ingressos':
+            with open(self.filename, 'w') as f:
+                f.write('CONCEPTE;DIA;% IVA;IVA;SUBTOTAL;TOTAL;\n')
+                for row in data:
+                    taula = row[1]
+                    if taula == 'Taula  4':
+                        concepte = 'VARIS BARRA'
+                    else:
+                        concepte = 'VARIS TAULA'
+                    iva = (float(row[3]) * self.iva) / 100
+                    subtotal = float(row[3]) - iva
+                    f.write('{};{};{};{};{};{};\n'.format(
+                        concepte, row[0], self.iva, "%.2f" % iva, "%.2f" % subtotal, "%.2f" % row[3])
+                    )
+        elif _type == 'gastos':
+            with open(self.filename, 'w', encoding='utf-8') as f:
+                f.write('CONCEPTE;DIA;PROVEIDOR;NFRA;GRUP;% IVA;BASE IMPOSABLE;TOTAL;\n')
+                for row in data:
+                    concepte = 'GASTO'
+                    f.write('{};{};{};{};{};{};{};{};\n'.format(
+                        concepte, row[0], row[1], row[3], row[2], "%.2f" % row[5], "%.2f" % row[4], "%.2f" % row[6])
+                    )
+        else:
+            return False
         try:
             Popen(self.filename, shell=True)
         except Exception as err:
             print(err)
             pass
+
+    def show_dialog_price(self):
+        price, ok = QInputDialog.getText(self, 'Seleccionar', 'Entra el preu:')
+        if ok:
+            self.price = int(price)
 
     def paint(self):
         self.show()
@@ -819,7 +843,7 @@ class Db:
         self.conn.commit()
         self.cursor.execute('''Create table if not exists empleat(id, name, password)''')
         self.conn.commit()
-        self.cursor.execute('''Create table if not exists sell(id, partner, grup, number, base, iva, total)''')
+        self.cursor.execute('''Create table if not exists payments(id, partner, grup, number, base, iva, total)''')
         self.conn.commit()
         self.init_db()
 
@@ -843,9 +867,9 @@ class Db:
         self.cursor.executemany('Insert into ticket values (?, ?, ?, ?)', _values)
         self.conn.commit()
 
-    def insert_sell(self, num, partner, group, number, base, iva, total):
+    def insert_payment(self, num, partner, group, number, base, iva, total):
         _values = [(num, partner, group, number, base, iva, total)]
-        self.cursor.executemany('Insert into sell values (?, ?, ?, ?, ?, ?, ?)', _values)
+        self.cursor.executemany('Insert into payments values (?, ?, ?, ?, ?, ?, ?)', _values)
         self.conn.commit()
 
     def insert_license(self, code, dt):
@@ -920,6 +944,18 @@ class Db:
             inform.append(row)
         return inform
 
+    def select_payments_by_dates(self, di, df):
+        inform = list()
+        for row in self.cursor.execute("select * from payments where id >=:di and id <=:df", {"di": di, "df": df}):
+            inform.append(row)
+        return inform
+
+    def select_payments_by_import(self, price):
+        inform = list()
+        for row in self.cursor.execute("select * from payments where total >=:price", {"price": price}):
+            inform.append(row)
+        return inform
+
     def select_license(self):
         _license = list()
         for row in self.cursor.execute('''select code, timestamp from llicencia'''):
@@ -931,6 +967,7 @@ class Db:
         for row in self.cursor.execute('''select * from proveidor'''):
             _partner.append(row)
         return _partner
+
 
 class Message:
 
