@@ -311,7 +311,10 @@ class Foo(QDialog):
         self.employee = 'No. def'
         self.table_num = 'Taula 0'
         self.suplement_concept = 'varis'
-        self.listing_path = str(os.environ['HOME'])
+        try:
+            self.listing_path = str(os.environ['HOME'])
+        except KeyError:
+            self.listing_path = str(os.environ['USERPROFILE'])
         self.table_id = 1
         self.add_num = 1
         self.iva = 21
@@ -784,7 +787,10 @@ class Foo(QDialog):
             self.listing_path = parser.items('PATH')[0][1]
             self.setWindowTitle('Kaisher - {}'.format(name))
         except configparser.NoSectionError:
-            self.listing_path = str(os.environ['HOME'])
+            try:
+                self.listing_path = str(os.environ['HOME'])
+            except KeyError:
+                self.listing_path = str(os.environ['USERPROFILE'])
             self.setWindowTitle('Kaisher')
 
     def config(self):
