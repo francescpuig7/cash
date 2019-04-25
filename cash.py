@@ -196,7 +196,7 @@ class Listing(QDialog):
                 f.write('CONCEPTE;DIA;% IVA;IVA;SUBTOTAL;TOTAL;\n')
                 for row in data:
                     taula = row[1]
-                    if taula == 'Taula  4':
+                    if 'Barra' in taula:
                         concepte = 'VARIS BARRA'
                     else:
                         concepte = 'VARIS TAULA'
@@ -216,7 +216,7 @@ class Listing(QDialog):
         else:
             return False
         try:
-            Popen(self.filename, shell=True)
+            Popen([self.filename], shell=True)
         except Exception as err:
             print(err)
             pass
@@ -224,7 +224,11 @@ class Listing(QDialog):
     def show_dialog_price(self):
         price, ok = QInputDialog.getText(self, 'Seleccionar', 'Entra el preu:')
         if ok:
-            self.price = int(price)
+            try:
+                self.price = int(price)
+            except Exception as err:
+                print(err)
+                pass
 
     def paint(self):
         self.show()
@@ -371,7 +375,6 @@ class Foo(QDialog):
             emp = Employee(employee[0], employee[1])
             self._employees.append(emp)
 
-        #self.comboBox_selectEmployee.maxVisibleItems(15)
         for employee in self._employees:
             self.comboBox_selectEmployee.addItem(employee.name)
         self.comboBox_selectEmployee.currentIndexChanged['QString'].connect(self.change_default_employee)
@@ -614,7 +617,7 @@ class Foo(QDialog):
             self.messaging.show(message='{0} {1}'.format('Cobrat', str("%.2f" % self.lcdNumber.value())))
             self.remove_products_table()
             self.tables[self.table_id].clear()
-            self.db.insert_ticket(str(time.strftime('%Y/%m/%d %H:%M:%S')),self.table_num, self.employee, float(self.lcdNumber.value()))
+            self.db.insert_ticket(str(time.strftime('%Y/%m/%d %H:%M:%S')), self.table_num, self.employee, float(self.lcdNumber.value()))
             self.db.update_ticket_number(1, self.ticket_number)
             self.reset_displays()
             #self.print_invoice()
@@ -689,9 +692,13 @@ class Foo(QDialog):
             height = 100
             i = 0
             for num, prods in self.tables.items():
+                if num == 5:
+                    text = 'Barra '
+                else:
+                    text = 'Taula '
                 i = (i % 2)+1  # repet two
                 if i == 1:
-                    self.btn = QPushButton('{0} {1}'.format('Taula ', str(num)), self.q_diag)
+                    self.btn = QPushButton('{0} {1}'.format(text, str(num)), self.q_diag)
                     self.btn.setGeometry(x, y, width, height)
                     if prods:
                         self.btn.setStyleSheet("background-color: tomato;")
@@ -700,7 +707,7 @@ class Foo(QDialog):
                     self.btn.clicked.connect(self.table_select)
                     x = x+width
                 else:
-                    self.btn = QPushButton('{0} {1}'.format('Taula ', str(num)), self.q_diag)
+                    self.btn = QPushButton('{0} {1}'.format(text, str(num)), self.q_diag)
                     self.btn.setGeometry(x, y, width, height)
                     if prods:
                         self.btn.setStyleSheet("background-color: tomato;")
@@ -847,7 +854,9 @@ class Db:
         self.conn.commit()
         self.cursor.execute('''Create table if not exists llicencia(code, timestamp)''')
         self.conn.commit()
-        self.cursor.execute('''Create table if not exists taula(id)''')
+        self.cursor.execute('''Drop table if exists taula''')
+        self.conn.commit()
+        self.cursor.execute('''Create table if not exists taula(id, description)''')
         self.conn.commit()
         self.cursor.execute('''Create table if not exists proveidor(nif, name, grup)''')
         self.conn.commit()
@@ -891,8 +900,12 @@ class Db:
 
     def insert_tables(self):
         for i in range(1, 5):
-            self.cursor.execute('Insert into taula values ({0})'.format(i))
+            _values = [(i, "Taula")]
+            self.cursor.executemany('Insert into taula values (?, ?)', _values)
             self.conn.commit()
+        _values = [(i + 1, "Barra")]
+        self.cursor.executemany('Insert into taula values (?, ?)', _values)
+        self.conn.commit()
 
     def update_ticket_number(self, id, number):
         self.cursor.execute('Update ticket_number set number={0} where id={1}'.format(number, id))
@@ -906,7 +919,7 @@ class Db:
 
     def select_table(self):
         _table = list()
-        for row in self.cursor.execute('''select id from taula'''):
+        for row in self.cursor.execute('''select * from taula'''):
             _table.append(row)
         return _table
 
