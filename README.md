@@ -14,3 +14,9 @@ A cash program for a bars and restaurants
 ### Consult sells!
 
 ![image](https://user-images.githubusercontent.com/19941550/56685456-4a772b80-66d2-11e9-8179-5d86b19adf2c.png)
+
+
+#### On a Win10 py3.7 cx-freeze install:
+
+```pip install --upgrade git+https://github.com/anthony-tuininga/cx_Freeze.git@master````
+on cmd execute: `cxfreeze-postinstall`
