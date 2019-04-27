@@ -17,6 +17,7 @@ from partner import Partner
 import csv
 import configparser
 from subprocess import Popen
+from platform import system
 
 TEMPLATES = os.path.join(
     os.path.dirname(os.path.realpath(__file__)), 'templates'
@@ -185,14 +186,13 @@ class Listing(QDialog):
         data = self.db.select_payments_by_import(self.price)
         self.write_file(data, 'gastos')
 
-    @property
-    def filename(self):
-        _file = '{}/{}_{}.csv'.format(self.listing_path, 'llistat', datetime.now().strftime('%Y%m%d_%H_%M_%S'))
+    def filename(self, _type):
+        _file = '{}/{}_{}.csv'.format(self.listing_path, _type, datetime.now().strftime('%Y%m%d_%H_%M_%S'))
         return _file
 
     def write_file(self, data, _type):
         if _type == 'ingressos':
-            with open(self.filename, 'w') as f:
+            with open(self.filename(_type), 'w') as f:
                 f.write('CONCEPTE;DIA;% IVA;IVA;SUBTOTAL;TOTAL;\n')
                 for row in data:
                     taula = row[1]
@@ -216,7 +216,15 @@ class Listing(QDialog):
         else:
             return False
         try:
-            Popen([self.filename], shell=True)
+            os_name = system().lower()
+            if os_name == 'windows':
+                starter = 'start'
+            elif os_name == 'linux':
+                starter = 'xdg-open'
+            elif os_name == 'darwin':
+                starter = 'open'
+            start = ' '.join([starter, self.filename])
+            Popen(start, shell=True)
         except Exception as err:
             print(err)
             pass
