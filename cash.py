@@ -6,9 +6,10 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import calendar
 from PyQt5 import uic, QtGui
-from PyQt5.QtCore import QDate
+from PyQt5.QtCore import QDate, QObject, QMetaObject
 from PyQt5.QtWidgets import (QAbstractItemView, QApplication, QDialog, QPushButton, QTableWidgetItem, QMessageBox,
-                             QLabel, QHBoxLayout, QTextEdit, QWidget, QVBoxLayout, QLineEdit, QFormLayout, QInputDialog)
+                             QLabel, QHBoxLayout, QTextEdit, QWidget, QVBoxLayout, QLineEdit, QFormLayout, QInputDialog,
+                             QGridLayout, QDialogButtonBox, QDateEdit)
 from product import Product, Menjar, Beguda
 from employee import Employee
 from utils import Utils
@@ -158,7 +159,7 @@ class Listing(QDialog):
         self.btn_sells_price.clicked.connect(self.gen_report_price_sells)
 
     def gen_report_dates(self):
-        pass
+        self.show_dialog_dates()
 
     def gen_report_monthly_sells(self):
         month = datetime.now().month
@@ -238,6 +239,44 @@ class Listing(QDialog):
             except Exception as err:
                 print(err)
                 pass
+
+    def show_dialog_months(self):
+        items = ("C", "C++", "Java", "Python")
+        item, ok = QInputDialog.getDate(self, "integer input dualog", "enter a number")
+        #item, ok = QInputDialog.getItem(self, "select input dialog", "list of languages", items, 0, False)
+        if ok:
+            print(ok)
+
+    def show_dialog_dates(self):
+        self.q_diag_dates = QDialog(self)
+        self.q_diag_dates.resize(371, 113)
+
+        gridLayout_2 = QGridLayout(self.q_diag_dates)
+        gridLayout_2.setObjectName("gridLayout_2")
+        gridLayout = QGridLayout()
+        gridLayout.setObjectName("gridLayout")
+        label_init_date = QLabel(self.q_diag_dates)
+        label_init_date.setObjectName("label")
+        label_init_date.setText("Data Inici")
+        gridLayout.addWidget(label_init_date, 0, 0, 1, 1)
+        init_date = QDateEdit(self.q_diag_dates)
+        init_date.setObjectName("lineEdit")
+        gridLayout.addWidget(init_date, 0, 1, 1, 1)
+        label_end_date = QLabel(self.q_diag_dates)
+        label_end_date.setObjectName("label_2")
+        label_end_date.setText("Data Final")
+        gridLayout.addWidget(label_end_date, 1, 0, 1, 1)
+        end_date = QDateEdit(self.q_diag_dates)
+        end_date.setObjectName("lineEdit_2")
+        gridLayout.addWidget(end_date, 1, 1, 1, 1)
+        gridLayout_2.addLayout(gridLayout, 0, 0, 1, 1)
+        buttonBox = QDialogButtonBox(self.q_diag_dates)
+
+        # buttonBox.setOrientation(QtCore.Qt.Horizontal)
+        buttonBox.setStandardButtons(QDialogButtonBox.Cancel | QDialogButtonBox.Ok)
+        buttonBox.setObjectName("buttonBox")
+        gridLayout_2.addWidget(buttonBox, 1, 0, 1, 1)
+        self.q_diag_dates.exec_()
 
     def paint(self):
         self.show()
