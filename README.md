@@ -18,5 +18,7 @@ A cash program for a bars and restaurants
 
 #### On a Win10 py3.7 cx-freeze install:
 
-```pip install --upgrade git+https://github.com/anthony-tuininga/cx_Freeze.git@master````
+https://github.com/anthony-tuininga/cx_Freeze/issues/407#issuecomment-453035642
+
+`pip install --upgrade git+https://github.com/anthony-tuininga/cx_Freeze.git@master`
 on cmd execute: `cxfreeze-postinstall`
