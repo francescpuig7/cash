@@ -1,0 +1,1011 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1440</width>
+    <height>805</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <widget class="QLCDNumber" name="lcdNumber">
+   <property name="geometry">
+    <rect>
+     <x>1000</x>
+     <y>10</y>
+     <width>351</width>
+     <height>91</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>11</pointsize>
+     <weight>50</weight>
+     <italic>false</italic>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLCDNumber {
+	background-color: #333333;
+	color: lime;
+}</string>
+   </property>
+   <property name="numDigits">
+    <number>7</number>
+   </property>
+   <property name="mode">
+    <enum>QLCDNumber::Bin</enum>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_borrar">
+   <property name="geometry">
+    <rect>
+     <x>950</x>
+     <y>500</y>
+     <width>91</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>../icons/judging.png</normaloff>../icons/judging.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>50</width>
+     <height>50</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_facturar">
+   <property name="geometry">
+    <rect>
+     <x>770</x>
+     <y>500</y>
+     <width>91</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <property name="contextMenuPolicy">
+    <enum>Qt::DefaultContextMenu</enum>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>../icons/026-cash.png</normaloff>../icons/026-cash.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>50</width>
+     <height>50</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="comboBox_selectDB">
+   <property name="geometry">
+    <rect>
+     <x>1160</x>
+     <y>660</y>
+     <width>181</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QComboBox{
+	border: 1px solid gray;
+	border-radius: 3px;
+	padding: 1px 18px 1px 3px;
+	min-width: 6em
+}
+
+QLale::drop-down {
+	subcontrol-origin: padding;
+	subcontrol-position: top right;
+	width: 15px;
+
+	border-left-width: 1px;
+	border-left-color: darkgray;
+	border-left-style: solid;
+	border-top-right-radius: 3px;
+	border-bottom-right-radius: 3px;
+}
+QComboBox::on{
+	padding-top: 3px;
+	padding-left: 4px;
+}
+
+QComboBox::down-arrow:on{
+	top: 1px;
+	left: 1px;
+}</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_num1">
+   <property name="geometry">
+    <rect>
+     <x>770</x>
+     <y>580</y>
+     <width>50</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>25</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>1</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_num2">
+   <property name="geometry">
+    <rect>
+     <x>820</x>
+     <y>580</y>
+     <width>50</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>25</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>2</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_num3">
+   <property name="geometry">
+    <rect>
+     <x>870</x>
+     <y>580</y>
+     <width>50</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>25</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>3</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_num4">
+   <property name="geometry">
+    <rect>
+     <x>770</x>
+     <y>630</y>
+     <width>50</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>25</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>4</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_num5">
+   <property name="geometry">
+    <rect>
+     <x>820</x>
+     <y>630</y>
+     <width>50</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>25</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>5</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_num6">
+   <property name="geometry">
+    <rect>
+     <x>870</x>
+     <y>630</y>
+     <width>50</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>25</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>6</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_num7">
+   <property name="geometry">
+    <rect>
+     <x>770</x>
+     <y>680</y>
+     <width>50</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>25</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>7</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_num8">
+   <property name="geometry">
+    <rect>
+     <x>820</x>
+     <y>680</y>
+     <width>50</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>25</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>8</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_num9">
+   <property name="geometry">
+    <rect>
+     <x>870</x>
+     <y>680</y>
+     <width>50</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>25</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>9</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_10">
+   <property name="geometry">
+    <rect>
+     <x>870</x>
+     <y>730</y>
+     <width>50</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>25</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>,</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_num0">
+   <property name="geometry">
+    <rect>
+     <x>770</x>
+     <y>729</y>
+     <width>101</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>25</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>0</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_llistats">
+   <property name="geometry">
+    <rect>
+     <x>1040</x>
+     <y>500</y>
+     <width>91</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>../icons/calculating-1.png</normaloff>../icons/calculating-1.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>50</width>
+     <height>50</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_llicencia">
+   <property name="geometry">
+    <rect>
+     <x>1310</x>
+     <y>500</y>
+     <width>91</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>../icons/school-material.png</normaloff>../icons/school-material.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>50</width>
+     <height>50</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_time">
+   <property name="geometry">
+    <rect>
+     <x>1200</x>
+     <y>110</y>
+     <width>151</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Data</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_12">
+   <property name="geometry">
+    <rect>
+     <x>920</x>
+     <y>680</y>
+     <width>50</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>25</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>X</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_13">
+   <property name="geometry">
+    <rect>
+     <x>920</x>
+     <y>630</y>
+     <width>50</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>25</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>-</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_14">
+   <property name="geometry">
+    <rect>
+     <x>920</x>
+     <y>580</y>
+     <width>50</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>25</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>+</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_numc">
+   <property name="geometry">
+    <rect>
+     <x>920</x>
+     <y>730</y>
+     <width>50</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>25</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>C</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_ventas">
+   <property name="geometry">
+    <rect>
+     <x>1130</x>
+     <y>500</y>
+     <width>91</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>../icons/line-graph.png</normaloff>../icons/line-graph.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>50</width>
+     <height>50</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_config">
+   <property name="geometry">
+    <rect>
+     <x>1220</x>
+     <y>500</y>
+     <width>91</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>../icons/men.png</normaloff>../icons/men.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>50</width>
+     <height>50</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="comboBox_selectEmployee">
+   <property name="geometry">
+    <rect>
+     <x>1160</x>
+     <y>690</y>
+     <width>181</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QComboBox{
+	border: 1px solid gray;
+	border-radius: 3px;
+	padding: 1px 18px 1px 3px;
+	min-width: 6em
+}
+
+QLale::drop-down {
+	subcontrol-origin: padding;
+	subcontrol-position: top right;
+	width: 15px;
+
+	border-left-width: 1px;
+	border-left-color: darkgray;
+	border-left-style: solid;
+	border-top-right-radius: 3px;
+	border-bottom-right-radius: 3px;
+}
+QComboBox::on{
+	padding-top: 3px;
+	padding-left: 4px;
+}
+
+QComboBox::down-arrow:on{
+	top: 1px;
+	left: 1px;
+}</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_obrir_taula">
+   <property name="geometry">
+    <rect>
+     <x>860</x>
+     <y>500</y>
+     <width>91</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>../icons/table.png</normaloff>../icons/table.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>50</width>
+     <height>50</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_ventas_2">
+   <property name="geometry">
+    <rect>
+     <x>980</x>
+     <y>720</y>
+     <width>51</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>../../../.designer/backup/images/User Group Man Woman.png</normaloff>../../../.designer/backup/images/User Group Man Woman.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>32</width>
+     <height>32</height>
+    </size>
+   </property>
+   <property name="autoDefault">
+    <bool>false</bool>
+   </property>
+   <property name="flat">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QTableWidget" name="order_view">
+   <property name="geometry">
+    <rect>
+     <x>780</x>
+     <y>130</y>
+     <width>621</width>
+     <height>361</height>
+    </rect>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="horizontalScrollBarPolicy">
+    <enum>Qt::ScrollBarAlwaysOff</enum>
+   </property>
+   <property name="editTriggers">
+    <set>QAbstractItemView::NoEditTriggers</set>
+   </property>
+   <property name="dragEnabled">
+    <bool>false</bool>
+   </property>
+   <property name="dragDropMode">
+    <enum>QAbstractItemView::NoDragDrop</enum>
+   </property>
+   <property name="alternatingRowColors">
+    <bool>true</bool>
+   </property>
+   <property name="selectionBehavior">
+    <enum>QAbstractItemView::SelectItems</enum>
+   </property>
+   <property name="showGrid">
+    <bool>true</bool>
+   </property>
+   <property name="gridStyle">
+    <enum>Qt::CustomDashLine</enum>
+   </property>
+   <property name="sortingEnabled">
+    <bool>false</bool>
+   </property>
+   <attribute name="horizontalHeaderDefaultSectionSize">
+    <number>175</number>
+   </attribute>
+   <attribute name="horizontalHeaderMinimumSectionSize">
+    <number>40</number>
+   </attribute>
+   <attribute name="horizontalHeaderStretchLastSection">
+    <bool>true</bool>
+   </attribute>
+   <attribute name="verticalHeaderDefaultSectionSize">
+    <number>30</number>
+   </attribute>
+   <column>
+    <property name="text">
+     <string>Producte</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Quantitat</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Preu</string>
+    </property>
+   </column>
+  </widget>
+  <widget class="QLabel" name="label_table">
+   <property name="geometry">
+    <rect>
+     <x>780</x>
+     <y>110</y>
+     <width>71</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Taula</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>1360</x>
+     <y>20</y>
+     <width>51</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+     <pointsize>90</pointsize>
+     <weight>50</weight>
+     <italic>false</italic>
+     <bold>false</bold>
+     <strikeout>false</strikeout>
+     <kerning>false</kerning>
+    </font>
+   </property>
+   <property name="text">
+    <string>€</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_ticket_number">
+   <property name="geometry">
+    <rect>
+     <x>1110</x>
+     <y>110</y>
+     <width>91</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Tiquet Nº</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>780</x>
+     <y>10</y>
+     <width>201</width>
+     <height>91</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap>logo.jpg</pixmap>
+   </property>
+   <property name="scaledContents">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QTextEdit" name="subtotal_label">
+   <property name="geometry">
+    <rect>
+     <x>980</x>
+     <y>580</y>
+     <width>171</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="lineWidth">
+    <number>3</number>
+   </property>
+   <property name="readOnly">
+    <bool>true</bool>
+   </property>
+   <property name="html">
+    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'.SF NS Text'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; color:#978613;&quot;&gt;Sub Total&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </widget>
+  <widget class="QTextEdit" name="iva_label">
+   <property name="geometry">
+    <rect>
+     <x>980</x>
+     <y>650</y>
+     <width>171</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="lineWidth">
+    <number>3</number>
+   </property>
+   <property name="readOnly">
+    <bool>true</bool>
+   </property>
+   <property name="html">
+    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'.SF NS Text'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; color:#e36c0d;&quot;&gt;IVA&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </widget>
+  <widget class="QTextEdit" name="total_label">
+   <property name="geometry">
+    <rect>
+     <x>980</x>
+     <y>720</y>
+     <width>171</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="lineWidth">
+    <number>3</number>
+   </property>
+   <property name="readOnly">
+    <bool>true</bool>
+   </property>
+   <property name="html">
+    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'.SF NS Text'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Total&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </widget>
+  <widget class="QTabWidget" name="product_box">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>20</y>
+     <width>731</width>
+     <height>761</height>
+    </rect>
+   </property>
+   <property name="mouseTracking">
+    <bool>false</bool>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="tabPosition">
+    <enum>QTabWidget::North</enum>
+   </property>
+   <property name="currentIndex">
+    <number>0</number>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>55</width>
+     <height>55</height>
+    </size>
+   </property>
+   <property name="elideMode">
+    <enum>Qt::ElideMiddle</enum>
+   </property>
+   <property name="usesScrollButtons">
+    <bool>false</bool>
+   </property>
+   <property name="documentMode">
+    <bool>false</bool>
+   </property>
+   <property name="movable">
+    <bool>true</bool>
+   </property>
+   <widget class="QWidget" name="tab_food">
+    <attribute name="icon">
+     <iconset>
+      <normaloff>../icons/chicken.png</normaloff>../icons/chicken.png</iconset>
+    </attribute>
+    <attribute name="title">
+     <string/>
+    </attribute>
+    <widget class="QProgressBar" name="progressBar">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>670</y>
+       <width>701</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QProgressBar {
+	border: 1px solid grey;
+	border-radius: 5px;
+	text-align: center;
+}
+
+QProgressBar::chunk {
+	background-color: deepskyblue;
+	margin: 0.5px;
+	width: 10px;
+}</string>
+     </property>
+     <property name="value">
+      <number>24</number>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="tab_drink">
+    <attribute name="icon">
+     <iconset>
+      <normaloff>../icons/soda.png</normaloff>../icons/soda.png</iconset>
+    </attribute>
+    <attribute name="title">
+     <string/>
+    </attribute>
+   </widget>
+   <widget class="QWidget" name="tab">
+    <attribute name="icon">
+     <iconset>
+      <normaloff>../icons/008-sausage.png</normaloff>../icons/008-sausage.png</iconset>
+    </attribute>
+    <attribute name="title">
+     <string/>
+    </attribute>
+   </widget>
+  </widget>
+  <widget class="QPushButton" name="btn_cancel_ticket">
+   <property name="geometry">
+    <rect>
+     <x>1160</x>
+     <y>720</y>
+     <width>131</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Cancelar Tiquet</string>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>50</width>
+     <height>50</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_payments">
+   <property name="geometry">
+    <rect>
+     <x>1310</x>
+     <y>580</y>
+     <width>91</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>../icons/banker.png</normaloff>../icons/banker.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>50</width>
+     <height>50</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_llicencia_2">
+   <property name="geometry">
+    <rect>
+     <x>1220</x>
+     <y>580</y>
+     <width>91</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>../icons/033-bill.png</normaloff>../icons/033-bill.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>50</width>
+     <height>50</height>
+    </size>
+   </property>
+  </widget>
+  <zorder>lcdNumber</zorder>
+  <zorder>comboBox_selectDB</zorder>
+  <zorder>btn_num1</zorder>
+  <zorder>btn_num2</zorder>
+  <zorder>btn_num3</zorder>
+  <zorder>btn_num4</zorder>
+  <zorder>btn_num5</zorder>
+  <zorder>btn_num6</zorder>
+  <zorder>btn_num7</zorder>
+  <zorder>btn_num8</zorder>
+  <zorder>btn_num9</zorder>
+  <zorder>pushButton_10</zorder>
+  <zorder>btn_num0</zorder>
+  <zorder>label_time</zorder>
+  <zorder>pushButton_12</zorder>
+  <zorder>pushButton_13</zorder>
+  <zorder>pushButton_14</zorder>
+  <zorder>btn_numc</zorder>
+  <zorder>comboBox_selectEmployee</zorder>
+  <zorder>btn_ventas_2</zorder>
+  <zorder>btn_facturar</zorder>
+  <zorder>btn_llistats</zorder>
+  <zorder>btn_llicencia</zorder>
+  <zorder>btn_ventas</zorder>
+  <zorder>btn_config</zorder>
+  <zorder>btn_borrar</zorder>
+  <zorder>btn_obrir_taula</zorder>
+  <zorder>order_view</zorder>
+  <zorder>label_table</zorder>
+  <zorder>label</zorder>
+  <zorder>label_ticket_number</zorder>
+  <zorder>label_2</zorder>
+  <zorder>subtotal_label</zorder>
+  <zorder>iva_label</zorder>
+  <zorder>total_label</zorder>
+  <zorder>product_box</zorder>
+  <zorder>btn_cancel_ticket</zorder>
+  <zorder>btn_payments</zorder>
+  <zorder>btn_llicencia_2</zorder>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

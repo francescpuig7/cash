@@ -19,9 +19,10 @@ import configparser
 from subprocess import Popen
 from platform import system
 
-TEMPLATES = os.path.join(
-    os.path.dirname(os.path.realpath(__file__)), 'templates'
-)
+TEMPLATES = os.path.join('.', 'templates')
+#TEMPLATES = os.path.join(
+#    os.path.dirname(os.path.realpath(__file__)), 'templates'
+#)
 
 
 class Login(QDialog):
@@ -847,10 +848,11 @@ class Ui_Dialog(object):
     def cancel(self):
         pass
 
+
 class Db:
     def __init__(self):
         import sqlite3
-        self.conn = sqlite3.connect('restaurant.db')
+        self.conn = sqlite3.connect(self.db_path)
         self.cursor = self.conn.cursor()
         self.cursor.execute('''Drop table if exists producte''')
         self.conn.commit()
@@ -873,6 +875,10 @@ class Db:
         self.cursor.execute('''Create table if not exists payments(id, partner, grup, number, base, iva, total)''')
         self.conn.commit()
         self.init_db()
+
+    @property
+    def db_path(self):
+        return '/'.join([str(os.environ['HOME']), 'restaurant.db'])
 
     def init_db(self):
         employees = [x for x in self.cursor.execute('''select * from empleat''')]
