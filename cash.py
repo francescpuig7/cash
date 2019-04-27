@@ -917,7 +917,10 @@ class Db:
 
     @property
     def db_path(self):
-        return '/'.join([str(os.environ['HOME']), 'restaurant.db'])
+        try:
+            return '/'.join([str(os.environ['HOME']), 'restaurant.db'])
+        except KeyError:
+            return '/'.join([str(os.environ['USERPROFILE']), 'restaurant.db'])
 
     def init_db(self):
         employees = [x for x in self.cursor.execute('''select * from empleat''')]
