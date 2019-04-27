@@ -13,6 +13,7 @@ options = {
     'build_exe': {
         'include_files': [
             'templates',
+            'icons',
             'restaurant.ui',
             'products.csv',
             'configs/config.cfg',
