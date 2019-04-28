@@ -368,10 +368,12 @@ class Sales(QDialog):
             tickets = self.db.select_ticket('year', di=time.strftime('%Y'))
         elif self.view == 'Total':
             tickets = self.db.select_ticket('total')
+        elif self.view == 'Pagaments':
+            tickets = self.db.select_payments_by_import(0)
         else:
             return False
 
-        total = 1
+        total = 0
         self.sales_view.setRowCount(0)
         for ticket in tickets:
             rowPosition = self.sales_view.rowCount()
@@ -379,15 +381,20 @@ class Sales(QDialog):
             self.sales_view.setItem(rowPosition, 0, QTableWidgetItem(str(ticket[0])))
             self.sales_view.setItem(rowPosition, 1, QTableWidgetItem(str(ticket[1])))
             self.sales_view.setItem(rowPosition, 2, QTableWidgetItem(str(ticket[2])))
-            self.sales_view.setItem(rowPosition, 3, QTableWidgetItem(str(ticket[3])))
-            total += ticket[3]
-        self.label_total.setText(str(total))
+            if self.view == 'Pagaments':
+                self.sales_view.setItem(rowPosition, 3, QTableWidgetItem(str(ticket[6])))
+                total += ticket[6]
+            else:
+                self.sales_view.setItem(rowPosition, 3, QTableWidgetItem(str(ticket[3])))
+                total += ticket[3]
+        self.label_total.setText(str("%.2f" % total))
         self.show()
         # self.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)  # Set not editable
 
     def change_default_view(self, sign):
         self.view = str(sign)
         self.paint()
+
 
 class Foo(QDialog):
     def __init__(self):
