@@ -150,36 +150,57 @@ class Listing(QDialog):
         self.iva = iva
         self.listing_path = listing_path
         self.price = 0
+        self.di = None
+        self.df = None
 
-        self.btn_payments_monthly.clicked.connect(self.gen_report_dates)
-        self.btn_payments_dates.clicked.connect(self.gen_report_dates)
-        self.btn_payments_price.clicked.connect(self.gen_report_price_payments)
         self.btn_sells_monthly.clicked.connect(self.gen_report_monthly_sells)
-        self.btn_sells_dates.clicked.connect(self.gen_report_price_sells)
+        self.btn_sells_dates.clicked.connect(self.gen_report_dates_sells)
         self.btn_sells_price.clicked.connect(self.gen_report_price_sells)
 
-    def gen_report_dates(self):
-        self.show_dialog_dates()
+        self.btn_payments_monthly.clicked.connect(self.gen_report_monthly_payments)
+        self.btn_payments_dates.clicked.connect(self.gen_report_dates_payments)
+        self.btn_payments_price.clicked.connect(self.gen_report_price_payments)
 
     def gen_report_monthly_sells(self):
-        month = datetime.now().month
-        year = datetime.now().year
+        _date = datetime.now() - relativedelta(months=1)
+        month = _date.month
+        year = _date.year
         last_day_of_month = calendar.monthrange(year, month)[1]
         di = '{}/{}/01'.format(year, str(month).zfill(2))
         df = '{}/{}/{}'.format(year, str(month).zfill(2), last_day_of_month)
         data = self.db.select_ticket('month', di=di, df=df)
         self.write_file(data, 'ingressos')
 
+    def gen_report_monthly_payments(self):
+        _date = datetime.now() - relativedelta(months=1)
+        month = _date.month
+        year = _date.year
+        last_day_of_month = calendar.monthrange(year, month)[1]
+        di = '{}/{}/01'.format(year, str(month).zfill(2))
+        df = '{}/{}/{}'.format(year, str(month).zfill(2), last_day_of_month)
+        data = self.db.select_payments_by_dates(di=di, df=df)
+        self.write_file(data, 'gastos')
+
+    def gen_report_dates_sells(self):
+        self.show_dialog_dates()
+        if self.di and self.df:
+            data = self.db.select_ticket('month', di=self.di, df=self.df)
+            self.di = None
+            self.df = None
+            self.write_file(data, 'ingressos')
+
+    def gen_report_dates_payments(self):
+        self.show_dialog_dates()
+        if self.di and self.df:
+            data = self.db.select_payments_by_dates(di=self.di, df=self.df)
+            self.di = None
+            self.df = None
+            self.write_file(data, 'gastos')
+
     def gen_report_price_sells(self):
         self.price = 0
         self.show_dialog_price()
         data = self.db.select_sell_by_import(self.price)
-        self.write_file(data, 'ingressos')
-
-    def gen_report_dates_sells(self):
-        di = ''
-        df = ''
-        data = self.db.select_sell_by_import(di, df)
         self.write_file(data, 'ingressos')
 
     def gen_report_price_payments(self):
@@ -193,8 +214,9 @@ class Listing(QDialog):
         return _file
 
     def write_file(self, data, _type):
+        filename = self.filename(_type)
         if _type == 'ingressos':
-            with open(self.filename(_type), 'w') as f:
+            with open(filename, 'w') as f:
                 f.write('CONCEPTE;DIA;% IVA;IVA;SUBTOTAL;TOTAL;\n')
                 for row in data:
                     taula = row[1]
@@ -208,15 +230,20 @@ class Listing(QDialog):
                         concepte, row[0], self.iva, "%.2f" % iva, "%.2f" % subtotal, "%.2f" % row[3])
                     )
         elif _type == 'gastos':
-            with open(self.filename, 'w', encoding='utf-8') as f:
-                f.write('CONCEPTE;DIA;PROVEIDOR;NFRA;GRUP;% IVA;BASE IMPOSABLE;TOTAL;\n')
+            with open(filename, 'w', encoding='utf-8') as f:
+                f.write('CONCEPTE;DIA;PROVEIDOR;NUM FACTURA;GRUP;BASE IMPOSABLE;% IVA;TOTAL;\n')
                 for row in data:
                     concepte = 'GASTO'
+                    dia = row[0]
+                    partner = row[1]
+                    grup = row[2]
+                    nfra = row[3]
+                    base = row[4]
+                    iva = row[5]
+                    total = row[6]
                     f.write('{};{};{};{};{};{};{};{};\n'.format(
-                        concepte, row[0], row[1], row[3], row[2], "%.2f" % row[5], "%.2f" % row[4], "%.2f" % row[6])
+                        concepte, dia, partner, nfra, grup, "%.2f" % base, iva, "%.2f" % total)
                     )
-        else:
-            return False
         try:
             os_name = system().lower()
             if os_name == 'windows':
@@ -225,7 +252,7 @@ class Listing(QDialog):
                 starter = 'xdg-open'
             elif os_name == 'darwin':
                 starter = 'open'
-            start = ' '.join([starter, self.filename])
+            start = ' '.join([starter, filename])
             Popen(start, shell=True)
         except Exception as err:
             print(err)
@@ -240,13 +267,6 @@ class Listing(QDialog):
                 print(err)
                 pass
 
-    def show_dialog_months(self):
-        items = ("C", "C++", "Java", "Python")
-        item, ok = QInputDialog.getDate(self, "integer input dualog", "enter a number")
-        #item, ok = QInputDialog.getItem(self, "select input dialog", "list of languages", items, 0, False)
-        if ok:
-            print(ok)
-
     def show_dialog_dates(self):
         self.q_diag_dates = QDialog(self)
         self.q_diag_dates.resize(371, 113)
@@ -259,16 +279,16 @@ class Listing(QDialog):
         label_init_date.setObjectName("label")
         label_init_date.setText("Data Inici")
         gridLayout.addWidget(label_init_date, 0, 0, 1, 1)
-        init_date = QDateEdit(self.q_diag_dates)
-        init_date.setObjectName("lineEdit")
-        gridLayout.addWidget(init_date, 0, 1, 1, 1)
+        self.init_date = QDateEdit(self.q_diag_dates)
+        self.init_date.setObjectName("lineEdit")
+        gridLayout.addWidget(self.init_date, 0, 1, 1, 1)
         label_end_date = QLabel(self.q_diag_dates)
         label_end_date.setObjectName("label_2")
         label_end_date.setText("Data Final")
         gridLayout.addWidget(label_end_date, 1, 0, 1, 1)
-        end_date = QDateEdit(self.q_diag_dates)
-        end_date.setObjectName("lineEdit_2")
-        gridLayout.addWidget(end_date, 1, 1, 1, 1)
+        self.end_date = QDateEdit(self.q_diag_dates)
+        self.end_date.setObjectName("lineEdit_2")
+        gridLayout.addWidget(self.end_date, 1, 1, 1, 1)
         gridLayout_2.addLayout(gridLayout, 0, 0, 1, 1)
         buttonBox = QDialogButtonBox(self.q_diag_dates)
 
@@ -276,7 +296,27 @@ class Listing(QDialog):
         buttonBox.setStandardButtons(QDialogButtonBox.Cancel | QDialogButtonBox.Ok)
         buttonBox.setObjectName("buttonBox")
         gridLayout_2.addWidget(buttonBox, 1, 0, 1, 1)
+        buttonBox.accepted.connect(self.accept_dates)
+        buttonBox.rejected.connect(self.reject_dates)
         self.q_diag_dates.exec_()
+
+    def accept_dates(self):
+        self.di = '{year}/{month}/{day}'.format(
+            year=str(self.init_date.date().year()),
+            month=str(self.init_date.date().month()).zfill(2),
+            day=str(self.init_date.date().day()).zfill(2)
+        )
+        self.df = '{year}/{month}/{day}'.format(
+            year=str(self.end_date.date().year()),
+            month=str(self.end_date.date().month()).zfill(2),
+            day=str(self.end_date.date().day()).zfill(2)
+        )
+        self.q_diag_dates.close()
+
+    def reject_dates(self):
+        self.di = None
+        self.df = None
+        self.q_diag_dates.close()
 
     def paint(self):
         self.show()
