@@ -520,50 +520,25 @@ class Foo(QDialog):
             # X, Y, WIDTH, HEIGHT
         num_btn = self.db.select()
         _list_btn = [_list_btn_rest, _list_btn_bar, _list_btn_beguda]
-        if False:
-            for lbutton in _list_btn:
-                x = 30
-                y = 30
-                width = 110
-                height = 110
-                it = 1
-                for button in lbutton:
-                    price = button.text()
-                    price = str(price)
-                    price = price.split(' ')
-                    if len(price) > 1 and price[len(price)-1] != '1.50':
-                        button.clicked.connect(lambda: self.set_product(price))
-                    elif price[len(price)-1] != '1.50':
-                        button.clicked.connect(self.show_dialog)
-
-                    button.setGeometry(x,y,width,height)
-                    if it!=6:
-                        x = x+width
-                        it = it+1
-                    else:
-                        it = 1
-                        y = y+height
-                        x = 30
-        else:
-            for lbutton in _list_btn:
-                x = 30
-                y = 30
-                width = 110
-                height = 110
-                it = 1
-                for product, button in lbutton.items():
-                    if product.name != self.suplement_concept:
-                        button.clicked.connect(lambda: self.set_product(product))
-                    else:
-                        button.clicked.connect(self.show_dialog)
-                    button.setGeometry(x, y, width, height)
-                    if it != 6:
-                        x = x + width
-                        it = it + 1
-                    else:
-                        it = 1
-                        y = y + height
-                        x = 30
+        for lbutton in _list_btn:
+            x = 30
+            y = 30
+            width = 110
+            height = 110
+            it = 1
+            for product, button in lbutton.items():
+                if product.name != self.suplement_concept:
+                    button.clicked.connect(lambda: self.set_product(product))
+                else:
+                    button.clicked.connect(self.show_dialog)
+                button.setGeometry(x, y, width, height)
+                if it != 6:
+                    x = x + width
+                    it = it + 1
+                else:
+                    it = 1
+                    y = y + height
+                    x = 30
 
         self.show()
         self.paint()

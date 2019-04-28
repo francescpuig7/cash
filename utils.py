@@ -19,7 +19,7 @@ class Utils(object):
         reader = csv.reader(open(filename, 'r'))
         codes = []
         for index, row in enumerate(reader):
-            codes.append(row)
+            codes.append(row[0])
         if code in codes:
             return True
         else:
