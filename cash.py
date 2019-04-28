@@ -387,7 +387,8 @@ class Foo(QDialog):
         self.initUi()
 
     def initUi(self):
-        self.ui = uic.loadUi('restaurant.ui', self)
+        self.ui = uic.loadUi(TEMPLATES + '/restaurant.ui', self)
+        #self.ui = uic.loadUi('restaurant.ui', self)
 
         # connect buttons
         self.btn_facturar.clicked.connect(self.invoicing)
