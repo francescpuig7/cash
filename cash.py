@@ -161,23 +161,24 @@ class Listing(QDialog):
         self.btn_payments_dates.clicked.connect(self.gen_report_dates_payments)
         self.btn_payments_price.clicked.connect(self.gen_report_price_payments)
 
-    def gen_report_monthly_sells(self):
+    @staticmethod
+    def get_dates():
         _date = datetime.now() - relativedelta(months=1)
         month = _date.month
         year = _date.year
         last_day_of_month = calendar.monthrange(year, month)[1]
         di = '{}/{}/01'.format(year, str(month).zfill(2))
         df = '{}/{}/{}'.format(year, str(month).zfill(2), last_day_of_month)
+
+        return di, df
+
+    def gen_report_monthly_sells(self):
+        di, df = self.get_dates()
         data = self.db.select_ticket('month', di=di, df=df)
         self.write_file(data, 'ingressos')
 
     def gen_report_monthly_payments(self):
-        _date = datetime.now() - relativedelta(months=1)
-        month = _date.month
-        year = _date.year
-        last_day_of_month = calendar.monthrange(year, month)[1]
-        di = '{}/{}/01'.format(year, str(month).zfill(2))
-        df = '{}/{}/{}'.format(year, str(month).zfill(2), last_day_of_month)
+        di, df = self.get_dates()
         data = self.db.select_payments_by_dates(di=di, df=df)
         self.write_file(data, 'gastos')
 
@@ -269,32 +270,25 @@ class Listing(QDialog):
 
     def show_dialog_dates(self):
         self.q_diag_dates = QDialog(self)
-        self.q_diag_dates.resize(371, 113)
+        self.q_diag_dates.resize(270, 113)
 
         gridLayout_2 = QGridLayout(self.q_diag_dates)
         gridLayout_2.setObjectName("gridLayout_2")
         gridLayout = QGridLayout()
-        gridLayout.setObjectName("gridLayout")
         label_init_date = QLabel(self.q_diag_dates)
-        label_init_date.setObjectName("label")
         label_init_date.setText("Data Inici")
         gridLayout.addWidget(label_init_date, 0, 0, 1, 1)
         self.init_date = QDateEdit(self.q_diag_dates)
-        self.init_date.setObjectName("lineEdit")
         gridLayout.addWidget(self.init_date, 0, 1, 1, 1)
         label_end_date = QLabel(self.q_diag_dates)
-        label_end_date.setObjectName("label_2")
         label_end_date.setText("Data Final")
         gridLayout.addWidget(label_end_date, 1, 0, 1, 1)
         self.end_date = QDateEdit(self.q_diag_dates)
-        self.end_date.setObjectName("lineEdit_2")
         gridLayout.addWidget(self.end_date, 1, 1, 1, 1)
         gridLayout_2.addLayout(gridLayout, 0, 0, 1, 1)
         buttonBox = QDialogButtonBox(self.q_diag_dates)
 
-        # buttonBox.setOrientation(QtCore.Qt.Horizontal)
         buttonBox.setStandardButtons(QDialogButtonBox.Cancel | QDialogButtonBox.Ok)
-        buttonBox.setObjectName("buttonBox")
         gridLayout_2.addWidget(buttonBox, 1, 0, 1, 1)
         buttonBox.accepted.connect(self.accept_dates)
         buttonBox.rejected.connect(self.reject_dates)
@@ -465,7 +459,6 @@ class Foo(QDialog):
 
         for table in _tables:
             self.tables[table[0]] = list()  # {table: [prods]}
-        print('taules: ', self.tables)
         emp_aux = self.db.select_employees()
         for employee in emp_aux:
             emp = Employee(employee[0], employee[1])

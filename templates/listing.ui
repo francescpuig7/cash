@@ -54,7 +54,7 @@
      <string notr="true">background-color: limegreen;</string>
     </property>
     <property name="text">
-     <string>LLISTAT MENSUAL</string>
+     <string>LLISTAT MENSUAL (mes anterior)</string>
     </property>
    </widget>
    <widget class="QPushButton" name="btn_sells_dates">
@@ -115,7 +115,7 @@
      <string notr="true">background-color: skyblue;</string>
     </property>
     <property name="text">
-     <string>LLISTAT MENSUAL</string>
+     <string>LLISTAT MENSUAL (mes anterior)</string>
     </property>
    </widget>
    <widget class="QPushButton" name="btn_payments_dates">
