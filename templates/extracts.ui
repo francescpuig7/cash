@@ -60,12 +60,7 @@
    </item>
    <item>
     <property name="text">
-     <string>Total Dia</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>Total Mes</string>
+     <string>Pagaments</string>
     </property>
    </item>
   </widget>

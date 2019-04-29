@@ -1,6 +1,6 @@
 from datetime import datetime
-import pandas as pd
 from os import path
+import csv
 
 class Utils(object):
 
@@ -16,8 +16,10 @@ class Utils(object):
 
     def check_code(self, code):
         filename = path.join(path.dirname(path.realpath(__file__)), 'keys.csv')
-        df_keys = pd.read_csv(filename)
-        codes = list(df_keys['code'])
+        reader = csv.reader(open(filename, 'r'))
+        codes = []
+        for index, row in enumerate(reader):
+            codes.append(row[0])
         if code in codes:
             return True
         else:

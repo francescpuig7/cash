@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Kaisher - Can Guix</string>
+   <string>Dialog</string>
   </property>
   <widget class="QLCDNumber" name="lcdNumber">
    <property name="geometry">
@@ -57,7 +57,7 @@
    </property>
    <property name="icon">
     <iconset>
-     <normaloff>265660-management/png/judging.png</normaloff>265660-management/png/judging.png</iconset>
+     <normaloff>../icons/judging.png</normaloff>../icons/judging.png</iconset>
    </property>
    <property name="iconSize">
     <size>
@@ -89,7 +89,7 @@
    </property>
    <property name="icon">
     <iconset>
-     <normaloff>856192-restaurant/png/026-cash.png</normaloff>856192-restaurant/png/026-cash.png</iconset>
+     <normaloff>../icons/026-cash.png</normaloff>../icons/026-cash.png</iconset>
    </property>
    <property name="iconSize">
     <size>
@@ -349,7 +349,7 @@ QComboBox::down-arrow:on{
    </property>
    <property name="icon">
     <iconset>
-     <normaloff>265660-management/png/calculating-1.png</normaloff>265660-management/png/calculating-1.png</iconset>
+     <normaloff>../icons/calculating-1.png</normaloff>../icons/calculating-1.png</iconset>
    </property>
    <property name="iconSize">
     <size>
@@ -372,7 +372,7 @@ QComboBox::down-arrow:on{
    </property>
    <property name="icon">
     <iconset>
-     <normaloff>265660-management/png/school-material.png</normaloff>265660-management/png/school-material.png</iconset>
+     <normaloff>../icons/school-material.png</normaloff>../icons/school-material.png</iconset>
    </property>
    <property name="iconSize">
     <size>
@@ -480,7 +480,7 @@ QComboBox::down-arrow:on{
    </property>
    <property name="icon">
     <iconset>
-     <normaloff>265660-management/png/line-graph.png</normaloff>265660-management/png/line-graph.png</iconset>
+     <normaloff>../icons/line-graph.png</normaloff>../icons/line-graph.png</iconset>
    </property>
    <property name="iconSize">
     <size>
@@ -503,7 +503,7 @@ QComboBox::down-arrow:on{
    </property>
    <property name="icon">
     <iconset>
-     <normaloff>265660-management/png/men.png</normaloff>265660-management/png/men.png</iconset>
+     <normaloff>../icons/men.png</normaloff>../icons/men.png</iconset>
    </property>
    <property name="iconSize">
     <size>
@@ -565,7 +565,7 @@ QComboBox::down-arrow:on{
    </property>
    <property name="icon">
     <iconset>
-     <normaloff>168305-food-and-drink/png/table.png</normaloff>168305-food-and-drink/png/table.png</iconset>
+     <normaloff>../icons/table.png</normaloff>../icons/table.png</iconset>
    </property>
    <property name="iconSize">
     <size>
@@ -827,7 +827,7 @@ p, li { white-space: pre-wrap; }
     <enum>QTabWidget::North</enum>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>0</number>
    </property>
    <property name="iconSize">
     <size>
@@ -850,7 +850,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QWidget" name="tab_food">
     <attribute name="icon">
      <iconset>
-      <normaloff>168305-food-and-drink/png/chicken.png</normaloff>168305-food-and-drink/png/chicken.png</iconset>
+      <normaloff>../icons/chicken.png</normaloff>../icons/chicken.png</iconset>
     </attribute>
     <attribute name="title">
      <string/>
@@ -885,7 +885,7 @@ QProgressBar::chunk {
    <widget class="QWidget" name="tab_drink">
     <attribute name="icon">
      <iconset>
-      <normaloff>168305-food-and-drink/png/soda.png</normaloff>168305-food-and-drink/png/soda.png</iconset>
+      <normaloff>../icons/soda.png</normaloff>../icons/soda.png</iconset>
     </attribute>
     <attribute name="title">
      <string/>
@@ -894,7 +894,7 @@ QProgressBar::chunk {
    <widget class="QWidget" name="tab">
     <attribute name="icon">
      <iconset>
-      <normaloff>856192-restaurant/png/008-sausage.png</normaloff>856192-restaurant/png/008-sausage.png</iconset>
+      <normaloff>../icons/008-sausage.png</normaloff>../icons/008-sausage.png</iconset>
     </attribute>
     <attribute name="title">
      <string/>
@@ -934,7 +934,7 @@ QProgressBar::chunk {
    </property>
    <property name="icon">
     <iconset>
-     <normaloff>icons/banker.png</normaloff>icons/banker.png</iconset>
+     <normaloff>../icons/banker.png</normaloff>../icons/banker.png</iconset>
    </property>
    <property name="iconSize">
     <size>
@@ -957,7 +957,7 @@ QProgressBar::chunk {
    </property>
    <property name="icon">
     <iconset>
-     <normaloff>icons/033-bill.png</normaloff>icons/033-bill.png</iconset>
+     <normaloff>../icons/033-bill.png</normaloff>../icons/033-bill.png</iconset>
    </property>
    <property name="iconSize">
     <size>
