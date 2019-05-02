@@ -447,7 +447,7 @@ class Foo(QDialog):
         self.connect_buttons_calc()
         self.comboBox_selectDB.addItem('restaurant.db')
         self.comboBox_selectDB.addItem('cafeteria.db')
-        date = time.strftime('%d/%m/%y %H:%M:%S')
+        date = time.strftime('%d/%m/%y')
         self.label_table.setText('Taula 1')
         self.label_time.setText('{0}: {1}'.format(self.label_time.text(), date))
         self.label_ticket_number.setText('{0}: {1}'.format(self.label_ticket_number.text(), self.ticket_number))
