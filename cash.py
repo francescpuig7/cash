@@ -843,6 +843,8 @@ class Foo(QDialog):
             self.messaging.show('Llicencia no activada')
             return False
         u = Utils()
+        if u.three_days_warning(dt):
+            self.messaging.show('Llicencia caduca el {0}'.format(dt), type='warning')
         if u.check_code(code) and u.check_license(code, dt):
             return True
         else:
