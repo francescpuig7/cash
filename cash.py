@@ -447,7 +447,7 @@ class Foo(QDialog):
         self.connect_buttons_calc()
         self.comboBox_selectDB.addItem('restaurant.db')
         self.comboBox_selectDB.addItem('cafeteria.db')
-        date = time.strftime('%d/%m/%y %H:%M:%S')
+        date = time.strftime('%d/%m/%y')
         self.label_table.setText('Taula 1')
         self.label_time.setText('{0}: {1}'.format(self.label_time.text(), date))
         self.label_ticket_number.setText('{0}: {1}'.format(self.label_ticket_number.text(), self.ticket_number))
@@ -843,6 +843,8 @@ class Foo(QDialog):
             self.messaging.show('Llicencia no activada')
             return False
         u = Utils()
+        if u.three_days_warning(dt):
+            self.messaging.show('Llicencia caduca el {0}'.format(dt), type='warning')
         if u.check_code(code) and u.check_license(code, dt):
             return True
         else:

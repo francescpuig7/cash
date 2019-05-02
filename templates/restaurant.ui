@@ -338,7 +338,7 @@ QComboBox::down-arrow:on{
   <widget class="QPushButton" name="btn_llistats">
    <property name="geometry">
     <rect>
-     <x>1040</x>
+     <x>1130</x>
      <y>500</y>
      <width>91</width>
      <height>80</height>
@@ -362,7 +362,7 @@ QComboBox::down-arrow:on{
    <property name="geometry">
     <rect>
      <x>1310</x>
-     <y>500</y>
+     <y>580</y>
      <width>91</width>
      <height>80</height>
     </rect>
@@ -384,9 +384,9 @@ QComboBox::down-arrow:on{
   <widget class="QLabel" name="label_time">
    <property name="geometry">
     <rect>
-     <x>1200</x>
+     <x>1260</x>
      <y>110</y>
-     <width>151</width>
+     <width>91</width>
      <height>17</height>
     </rect>
    </property>
@@ -469,7 +469,7 @@ QComboBox::down-arrow:on{
   <widget class="QPushButton" name="btn_ventas">
    <property name="geometry">
     <rect>
-     <x>1130</x>
+     <x>1040</x>
      <y>500</y>
      <width>91</width>
      <height>80</height>
@@ -612,6 +612,11 @@ QComboBox::down-arrow:on{
      <height>361</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <pointsize>15</pointsize>
+    </font>
+   </property>
    <property name="autoFillBackground">
     <bool>false</bool>
    </property>
@@ -710,14 +715,14 @@ QComboBox::down-arrow:on{
   <widget class="QLabel" name="label_ticket_number">
    <property name="geometry">
     <rect>
-     <x>1110</x>
+     <x>1150</x>
      <y>110</y>
      <width>91</width>
      <height>16</height>
     </rect>
    </property>
    <property name="text">
-    <string>Tiquet Nº</string>
+    <string>Tiquet #</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_2">
@@ -725,7 +730,7 @@ QComboBox::down-arrow:on{
     <rect>
      <x>780</x>
      <y>10</y>
-     <width>201</width>
+     <width>131</width>
      <height>91</height>
     </rect>
    </property>
@@ -733,7 +738,7 @@ QComboBox::down-arrow:on{
     <string/>
    </property>
    <property name="pixmap">
-    <pixmap>logo.jpg</pixmap>
+    <pixmap>../icons/logo.jpg</pixmap>
    </property>
    <property name="scaledContents">
     <bool>true</bool>
@@ -924,7 +929,7 @@ QProgressBar::chunk {
    <property name="geometry">
     <rect>
      <x>1310</x>
-     <y>580</y>
+     <y>500</y>
      <width>91</width>
      <height>80</height>
     </rect>

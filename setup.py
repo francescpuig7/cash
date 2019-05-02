@@ -7,7 +7,7 @@ import os
 buildOptions = dict(packages = [], excludes = [])
 
 import sys
-base = 'Win32GUI' if sys.platform=='win32' else None
+base = 'Win32GUI' if sys.platform == 'win32' else None
 
 options = {
     'build_exe': {
@@ -46,8 +46,9 @@ executables = [
 ]
 
 setup(name='cash',
-      version = '0.1',
-      description = 'a cash program for a bars and restaurants',
+      version = '0.0.1a',
+      description = 'A cash program for a bars and restaurants',
       #options = dict(build_exe = buildOptions),
       options=options,
-      executables = executables)
+      executables = executables,
+      author='Francesc Puig')
