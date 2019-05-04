@@ -445,8 +445,6 @@ class Foo(QDialog):
         #self.btn_config.clicked.connect(self.config)
 
         self.connect_buttons_calc()
-        self.comboBox_selectDB.addItem('restaurant.db')
-        self.comboBox_selectDB.addItem('cafeteria.db')
         date = time.strftime('%d/%m/%y')
         self.label_table.setText('Taula 1')
         self.label_time.setText('{0}: {1}'.format(self.label_time.text(), date))
@@ -525,7 +523,7 @@ class Foo(QDialog):
                 else:
                     button.clicked.connect(self.show_dialog)
                 button.setGeometry(x, y, width, height)
-                if it != 6:
+                if it != 5:
                     x = x + width
                     it = it + 1
                 else:
@@ -560,9 +558,9 @@ class Foo(QDialog):
 
     def paint(self):
         completed = 0
-        while completed < 100:
+        """while completed < 100:
             completed += 0.0001
-            self.progressBar.setValue(completed)
+            self.progressBar.setValue(completed)"""
 
     def add_price(self, total, subtotal=None, iva=None):
         if subtotal:
