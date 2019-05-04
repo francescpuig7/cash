@@ -14,7 +14,6 @@ options = {
         'include_files': [
             'templates',
             'icons',
-            'restaurant.ui',
             'products.csv',
             'configs/config.cfg',
             os.path.join(sys.base_prefix, 'DLLs', 'sqlite3.dll'),
