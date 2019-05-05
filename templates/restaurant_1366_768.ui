@@ -812,7 +812,11 @@ p, li { white-space: pre-wrap; }
     </rect>
    </property>
    <property name="text">
-    <string>Cancelar Tiquet</string>
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>../icons/forbidden.png</normaloff>../icons/forbidden.png</iconset>
    </property>
    <property name="iconSize">
     <size>
