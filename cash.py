@@ -264,9 +264,8 @@ class Listing(QDialog):
         if ok:
             try:
                 self.price = int(price)
-            except Exception as err:
-                print(err)
-                pass
+            except ValueError:
+                self.price = 0
 
     def show_dialog_dates(self):
         self.q_diag_dates = QDialog(self)
