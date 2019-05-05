@@ -67,8 +67,7 @@
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">
-</string>
+     <string notr="true"/>
     </property>
     <property name="text">
      <string>LLISTAT ENTRE DATES</string>
@@ -113,7 +112,7 @@
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: skyblue;</string>
+     <string notr="true"/>
     </property>
     <property name="text">
      <string>LLISTAT MENSUAL (mes anterior)</string>
@@ -129,7 +128,7 @@
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: skyblue;</string>
+     <string notr="true"/>
     </property>
     <property name="text">
      <string>LLISTAT ENTRE DATES</string>
@@ -145,7 +144,7 @@
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: skyblue;</string>
+     <string notr="true"/>
     </property>
     <property name="text">
      <string>LLISTAT PER PREU</string>
