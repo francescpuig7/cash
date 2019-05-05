@@ -404,6 +404,7 @@ class Foo(QDialog):
         self.employee = 'No. def'
         self.table_num = 'Taula 0'
         self.suplement_concept = 'varis'
+        self.main_view = 'restaurant.ui'
         try:
             self.listing_path = str(os.environ['HOME'])
         except KeyError:
@@ -428,7 +429,7 @@ class Foo(QDialog):
         self.initUi()
 
     def initUi(self):
-        self.ui = uic.loadUi(TEMPLATES + '/restaurant.ui', self)
+        self.ui = uic.loadUi(TEMPLATES + '/' + self.main_view, self)
         #self.ui = uic.loadUi('restaurant.ui', self)
 
         # connect buttons
@@ -733,7 +734,10 @@ class Foo(QDialog):
         price, ok = QInputDialog.getText(self, 'afegir linia', 'Entra el preu:')
         if ok:
             product = self.products[str(self.sender().text())]
-            price_multi = float(price) * float(self.add_num)
+            try:
+                price_multi = float(price) * float(self.add_num)
+            except ValueError:
+                return False
             self.set_product_table(product.name, self.add_num, price_multi)
             result = str(self.sender().text())
             self.tables[self.table_id].append(LineProd(product.name, price_multi, self.add_num))
@@ -863,6 +867,10 @@ class Foo(QDialog):
             except KeyError:
                 self.listing_path = str(os.environ['USERPROFILE'])
             self.setWindowTitle('Kaisher')
+        try:
+            self.main_view = parser.items('VIEW')[0][1]
+        except KeyError:
+            self.main_view = 'restaurant.ui'
 
     def config(self):
         dialog = QDialog()
