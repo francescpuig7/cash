@@ -18,7 +18,7 @@ class Utils(object):
 
     @staticmethod
     def check_code(code):
-        filename = path.join(path.dirname(path.realpath(__file__)), 'keys.csv')
+        filename = path.join(path.dirname(path.realpath(__file__)), 'configs', 'keys.csv')
         reader = csv.reader(open(filename, 'r'))
         codes = []
         for index, row in enumerate(reader):

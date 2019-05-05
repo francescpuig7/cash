@@ -14,7 +14,7 @@ options = {
             'templates',
             'icons',
             'products.csv',
-            'configs/config.cfg',
+            'configs',
             os.path.join(sys.base_prefix, 'DLLs', 'sqlite3.dll'),
             os.path.join(sys.base_prefix, 'DLLs', 'tk86t.dll'),
             os.path.join(sys.base_prefix, 'DLLs', 'tcl86t.dll'),
