@@ -40,7 +40,11 @@ options = {
 }
 
 executables = [
-    Executable('cash.py', base=base)
+    Executable(
+        script='cash.py',
+        base=base,
+        icon="icon.ico"
+    )
 ]
 
 setup(name='cash',
