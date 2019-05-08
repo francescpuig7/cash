@@ -872,9 +872,11 @@ class Foo(QDialog):
         parser = configparser.ConfigParser()
         base_path = './configs/'
         parser.read(base_path + '/config.cfg')
+        iva = parser.getint('IVA', 'iva')
+        self.iva = iva
         try:
-            name = parser.items('NAME')[0][1]
-            self.listing_path = parser.items('PATH')[0][1]
+            name = parser.get('NAME', 'name')
+            self.listing_path = parser.get('PATH', 'path')
             self.setWindowTitle('Kaisher - {}'.format(name))
         except configparser.NoSectionError:
             try:
@@ -883,8 +885,8 @@ class Foo(QDialog):
                 self.listing_path = str(os.environ['USERPROFILE'])
             self.setWindowTitle('Kaisher')
         try:
-            self.main_view = parser.items('VIEW')[0][1]
-        except KeyError:
+            self.main_view = parser.get('VIEW', 'view')
+        except configparser.NoSectionError:
             self.main_view = 'restaurant.ui'
 
     def config(self):
