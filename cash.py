@@ -6,7 +6,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import calendar
 from PyQt5 import uic, QtGui
-from PyQt5.QtCore import QDate, QObject, QMetaObject
+from PyQt5.QtCore import QDate
 from PyQt5.QtWidgets import (QAbstractItemView, QApplication, QDialog, QPushButton, QTableWidgetItem, QMessageBox,
                              QLabel, QHBoxLayout, QTextEdit, QWidget, QVBoxLayout, QLineEdit, QFormLayout, QInputDialog,
                              QGridLayout, QDialogButtonBox, QDateEdit)
@@ -21,6 +21,7 @@ from subprocess import Popen
 from platform import system
 
 TEMPLATES = os.path.join('.', 'templates')
+
 #TEMPLATES = os.path.join(
 #    os.path.dirname(os.path.realpath(__file__)), 'templates'
 #)
@@ -43,12 +44,25 @@ class Login(QDialog):
 
 
 class Config(QDialog):
-    def __init__(self, db, messaging):
+    def __init__(self, db, messaging, employee):
         super(Config, self).__init__()
         uic.loadUi(TEMPLATES + '/config.ui', self)
         self.db = db
         self.messaging = messaging
+        self._employees = list()
+
+        emp_aux = self.db.select_employees()
+        for employee in emp_aux:
+            emp = Employee(employee[0], employee[1])
+            self._employees.append(emp)
+
+        for employee in self._employees:
+            self.comboBox_selectEmployee.addItem(employee.name)
+        self.comboBox_selectEmployee.currentIndexChanged['QString'].connect(self.change_default_employee)
         self.save_button.clicked.connect(self.save_product)
+
+    def change_default_employee(self, sign):
+        print(sign)
 
     def save_product(self):
         if self.price.text() and self.name.text():
@@ -416,7 +430,7 @@ class Foo(QDialog):
         self.db = Db()
         self.ticket_number = self.db.select_ticket_number()
         self.sales = Sales(self.db)
-        self.config = Config(self.db, self.messaging)
+        self.config = Config(self.db, self.messaging, self.employee)
         row = self.db.select_partner()
         for x in row:
             partner = Partner(name=x[1], cif=x[0])
@@ -451,7 +465,6 @@ class Foo(QDialog):
         self.label_ticket_number.setText('{0}: {1}'.format(self.label_ticket_number.text(), self.ticket_number))
         self.order_view.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.db.select_ticket_number()
-        #self.product_box
         #self.btn.clicked.connect(self.paint)
         _tables = self.db.select_table()
 
@@ -461,10 +474,11 @@ class Foo(QDialog):
         for employee in emp_aux:
             emp = Employee(employee[0], employee[1])
             self._employees.append(emp)
+        self.employee = str(emp_aux[0][1])
 
-        for employee in self._employees:
-            self.comboBox_selectEmployee.addItem(employee.name)
-        self.comboBox_selectEmployee.currentIndexChanged['QString'].connect(self.change_default_employee)
+        #for employee in self._employees:
+        #    self.comboBox_selectEmployee.addItem(employee.name)
+        #self.comboBox_selectEmployee.currentIndexChanged['QString'].connect(self.change_default_employee)
 
         _list_btn_rest = dict()
         _list_btn_bar = dict()
@@ -659,6 +673,8 @@ class Foo(QDialog):
             self.total_label.setText('Total: ' + str("%.2f" % total))
             self.iva_label.setText('IVA: ' + str("%.2f" % iva))
             self.lcdNumber.display("%.2f" % total)
+        else:
+            self.reset_displays()
 
     def reset_displays(self):
         self.lcdNumber.display(0)
