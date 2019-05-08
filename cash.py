@@ -424,7 +424,7 @@ class Foo(QDialog):
             self.listing_path = str(os.environ['USERPROFILE'])
         self.table_id = 1
         self.add_num = 1
-        self.iva = 21
+        self.iva = 10
         self.messaging = Message()
         self._mydict = {'menu': 10, 'menucapsetmana': 25, 'vinegre': 2}
         self.db = Db()
