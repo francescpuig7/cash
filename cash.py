@@ -443,7 +443,7 @@ class Foo(QDialog):
 
     def initUi(self):
         self.ui = uic.loadUi(TEMPLATES + '/' + self.main_view, self)
-        #self.ui = uic.loadUi('restaurant.ui', self)
+        self.set_main_title()
 
         # connect buttons
         self.btn_facturar.clicked.connect(self.invoicing)
@@ -875,19 +875,26 @@ class Foo(QDialog):
         iva = parser.getint('IVA', 'iva')
         self.iva = iva
         try:
-            name = parser.get('NAME', 'name')
             self.listing_path = parser.get('PATH', 'path')
-            self.setWindowTitle('Kaisher - {}'.format(name))
         except configparser.NoSectionError:
             try:
                 self.listing_path = str(os.environ['HOME'])
             except KeyError:
                 self.listing_path = str(os.environ['USERPROFILE'])
-            self.setWindowTitle('Kaisher')
         try:
             self.main_view = parser.get('VIEW', 'view')
         except configparser.NoSectionError:
             self.main_view = 'restaurant.ui'
+
+    def set_main_title(self):
+        parser = configparser.ConfigParser()
+        base_path = './configs/'
+        parser.read(base_path + '/config.cfg')
+        name = parser.get('NAME', 'name')
+        try:
+            self.setWindowTitle('Kaisher - {}'.format(name))
+        except configparser.NoSectionError:
+            self.setWindowTitle('Kaisher')
 
     def config(self):
         dialog = QDialog()
