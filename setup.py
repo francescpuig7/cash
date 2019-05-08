@@ -43,14 +43,14 @@ executables = [
     Executable(
         script='cash.py',
         base=base,
-        icon="icon.ico"
+        icon="cash.ico"
     )
 ]
 
 setup(name='cash',
-      version = '0.0.1a',
-      description = 'A cash program for a bars and restaurants',
+      version='0.0.2',
+      description='A cash program for a bars and restaurants',
       #options = dict(build_exe = buildOptions),
       options=options,
-      executables = executables,
+      executables=executables,
       author='Francesc Puig')
