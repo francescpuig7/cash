@@ -53,7 +53,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>120</y>
+     <y>140</y>
      <width>161</width>
      <height>18</height>
     </rect>
@@ -66,7 +66,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>140</y>
+     <y>160</y>
      <width>151</width>
      <height>18</height>
     </rect>
@@ -151,6 +151,16 @@
      <string>Bar</string>
     </property>
    </item>
+  </widget>
+  <widget class="QComboBox" name="comboBox_selectEmployee">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>110</y>
+     <width>201</width>
+     <height>26</height>
+    </rect>
+   </property>
   </widget>
  </widget>
  <resources/>
