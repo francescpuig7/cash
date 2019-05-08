@@ -43,7 +43,7 @@ executables = [
     Executable(
         script='cash.py',
         base=base,
-        icon="cash.ico"
+        icon="icons/cash.ico"
     )
 ]
 
