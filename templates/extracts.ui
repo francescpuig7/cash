@@ -193,6 +193,35 @@
     <string>€</string>
    </property>
   </widget>
+  <widget class="QCheckBox" name="checkbox_editable">
+   <property name="geometry">
+    <rect>
+     <x>190</x>
+     <y>455</y>
+     <width>85</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Editable</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_delete">
+   <property name="geometry">
+    <rect>
+     <x>280</x>
+     <y>447</y>
+     <width>107</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton{ background-color: red }</string>
+   </property>
+   <property name="text">
+    <string>Borrar element</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections>
