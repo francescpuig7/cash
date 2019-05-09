@@ -19,6 +19,7 @@ import csv
 import configparser
 from subprocess import Popen
 from platform import system
+import logging
 
 TEMPLATES = os.path.join('.', 'templates')
 
@@ -157,7 +158,7 @@ class Payments(QDialog):
 
 class Listing(QDialog):
 
-    def __init__(self, db, messaging, iva, listing_path):
+    def __init__(self, db, messaging, iva, listing_path, logger):
         super(Listing, self).__init__()
         uic.loadUi(TEMPLATES + '/listing.ui', self)
         self.db = db
@@ -166,6 +167,7 @@ class Listing(QDialog):
         self.price = 0
         self.di = None
         self.df = None
+        self.logger = logger
 
         self.btn_sells_monthly.clicked.connect(self.gen_report_monthly_sells)
         self.btn_sells_dates.clicked.connect(self.gen_report_dates_sells)
@@ -187,42 +189,60 @@ class Listing(QDialog):
         return di, df
 
     def gen_report_monthly_sells(self):
-        di, df = self.get_dates()
-        data = self.db.select_ticket('month', di=di, df=df)
-        self.write_file(data, 'ingressos')
+        try:
+            di, df = self.get_dates()
+            data = self.db.select_ticket('month', di=di, df=df)
+            self.write_file(data, 'ingressos')
+        except Exception as err:
+            self.logger.error(str(err))
 
     def gen_report_monthly_payments(self):
-        di, df = self.get_dates()
-        data = self.db.select_payments_by_dates(di=di, df=df)
-        self.write_file(data, 'gastos')
+        try:
+            di, df = self.get_dates()
+            data = self.db.select_payments_by_dates(di=di, df=df)
+            self.write_file(data, 'gastos')
+        except Exception as err:
+            self.logger.error(str(err))
 
     def gen_report_dates_sells(self):
-        self.show_dialog_dates()
-        if self.di and self.df:
-            data = self.db.select_ticket('month', di=self.di, df=self.df)
-            self.di = None
-            self.df = None
-            self.write_file(data, 'ingressos')
+        try:
+            self.show_dialog_dates()
+            if self.di and self.df:
+                data = self.db.select_ticket('month', di=self.di, df=self.df)
+                self.di = None
+                self.df = None
+                self.write_file(data, 'ingressos')
+        except Exception as err:
+            self.logger.error(str(err))
 
     def gen_report_dates_payments(self):
-        self.show_dialog_dates()
-        if self.di and self.df:
-            data = self.db.select_payments_by_dates(di=self.di, df=self.df)
-            self.di = None
-            self.df = None
-            self.write_file(data, 'gastos')
+        try:
+            self.show_dialog_dates()
+            if self.di and self.df:
+                data = self.db.select_payments_by_dates(di=self.di, df=self.df)
+                self.di = None
+                self.df = None
+                self.write_file(data, 'gastos')
+        except Exception as err:
+            self.logger.error(str(err))
 
     def gen_report_price_sells(self):
-        self.price = 0
-        self.show_dialog_price()
-        data = self.db.select_sell_by_import(self.price)
-        self.write_file(data, 'ingressos')
+        try:
+            self.price = 0
+            self.show_dialog_price()
+            data = self.db.select_sell_by_import(self.price)
+            self.write_file(data, 'ingressos')
+        except Exception as err:
+            self.logger.error(str(err))
 
     def gen_report_price_payments(self):
-        self.price = 0
-        self.show_dialog_price()
-        data = self.db.select_payments_by_import(self.price)
-        self.write_file(data, 'gastos')
+        try:
+            self.price = 0
+            self.show_dialog_price()
+            data = self.db.select_payments_by_import(self.price)
+            self.write_file(data, 'gastos')
+        except Exception as err:
+            self.logger.error(str(err))
 
     def filename(self, _type):
         _file = '{}/{}_{}.csv'.format(self.listing_path, _type, datetime.now().strftime('%Y%m%d_%H_%M_%S'))
@@ -430,7 +450,7 @@ class Sales(QDialog):
 
 
 class Foo(QDialog):
-    def __init__(self):
+    def __init__(self, logger):
         super(Foo, self).__init__()
         self._products = list()
         self._employees = list()
@@ -444,6 +464,7 @@ class Foo(QDialog):
         self.table_num = 'Taula 0'
         self.suplement_concept = 'varis'
         self.main_view = 'restaurant.ui'
+        self.logger = logger
         try:
             self.listing_path = str(os.environ['HOME'])
         except KeyError:
@@ -464,7 +485,7 @@ class Foo(QDialog):
         self.read_config_file()
         self.payments = Payments(self.partners, self.messaging, self.db)
         self.license = License(self.db, self.messaging)
-        self.listing = Listing(self.db, self.messaging, self.iva, self.listing_path)
+        self.listing = Listing(self.db, self.messaging, self.iva, self.listing_path, self.logger)
         self.initUi()
 
     def initUi(self):
@@ -709,15 +730,18 @@ class Foo(QDialog):
         self.total_label.setText('Total')
 
     def invoicing(self):
-        if not self.check_license():
-            self.messaging.show('Llicencia caducada', type='warning')
-            return False
+        try:
+            if not self.check_license():
+                self.messaging.show('Llicencia caducada', type='warning')
+                return False
+        except Exception as err:
+            self.logger.error(str(err))
         if self.lcdNumber.value() == 0:
             self.messaging.show('No has afegit cap producte', 'warning')
         else:
             self.ticket_number += 1
             self.label_ticket_number.setText('Tiquet Nº: {0}'.format(self.ticket_number))
-            self.write_invoice()
+            #self.write_invoice()
             self.messaging.show(message='{0} {1}'.format('Cobrat', str("%.2f" % self.lcdNumber.value())))
             self.remove_products_table()
             self.tables[self.table_id].clear()
@@ -918,9 +942,9 @@ class Foo(QDialog):
         parser.read(base_path + '/config.cfg')
         name = parser.get('NAME', 'name')
         try:
-            self.setWindowTitle('Kaisher - {}'.format(name))
+            self.setWindowTitle('Compta Cash - {}'.format(name))
         except configparser.NoSectionError:
-            self.setWindowTitle('Kaisher')
+            self.setWindowTitle('Compta Cash')
 
     def config(self):
         dialog = QDialog()
@@ -1151,7 +1175,26 @@ class LineProd:
         self.price = "%.2f" % price
         self.quant = quant
 
+
+# LOGS
+def setup_log():
+    logger = logging.getLogger('Compta cash')
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    try:
+        user_path = r'{0}/{1}'.format(os.environ['HOME'], 'logs_compta_cash.log')
+    except KeyError:
+        user_path = r'{0}/{1}'.format(os.environ['USERPROFILE'], 'logs_compta_cash.log')
+    hdlr = logging.FileHandler(user_path)
+    hdlr.setFormatter(formatter)
+    logger.addHandler(hdlr)
+    logger.setLevel(logging.INFO)
+    logs = logger
+
+    return logs
+
+
 if __name__ == '__main__':
+    logger = setup_log()
     app = QApplication(sys.argv)
-    ex = Foo()
+    ex = Foo(logger)
     sys.exit(app.exec_())
