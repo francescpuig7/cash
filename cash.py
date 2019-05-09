@@ -359,7 +359,10 @@ class Sales(QDialog):
         uic.loadUi(TEMPLATES + '/extracts.ui', self)
         self.db = db
         self.view = 'Dia'
+        self.btn_delete.setVisible(False)
         self.comboBox_select_result.currentIndexChanged['QString'].connect(self.change_default_view)
+        self.checkbox_editable.stateChanged.connect(self.activate_delete_button)
+        self.btn_delete.clicked.connect(self.delete_item)
 
     def paint(self):
         if self.view == 'Dia':
@@ -401,6 +404,29 @@ class Sales(QDialog):
     def change_default_view(self, sign):
         self.view = str(sign)
         self.paint()
+
+    def activate_delete_button(self):
+        if self.checkbox_editable.isChecked():
+            self.btn_delete.setVisible(True)
+        else:
+            self.btn_delete.setVisible(False)
+
+    def delete_item(self):
+        if self.sales_view.selectedItems():
+            for _item in self.sales_view.selectedItems():
+                _id = self.sales_view.item(_item.row(), 0).text()
+                if self.view == 'Pagaments':
+                    table = 'payments'
+                    partner = self.sales_view.item(_item.row(), 1).text()
+                    total = self.sales_view.item(_item.row(), 3).text()
+                else:
+                    table = 'ticket'
+                self.sales_view.removeRow(_item.row())
+                break
+            if self.view == 'Pagaments':
+                self.db.delete_payment(table, _id, partner, total)
+            else:
+                self.db.delete_ticket(table, _id)
 
 
 class Foo(QDialog):
@@ -1094,6 +1120,18 @@ class Db:
         for row in self.cursor.execute('''select * from proveidor'''):
             _partner.append(row)
         return _partner
+
+    def delete_ticket(self, table, _id):
+        query = "delete from {} where id='{}'".format(table, _id)
+        print(query)
+        self.cursor.execute(query)
+        self.conn.commit()
+
+    def delete_payment(self, table, _id, partner, total):
+        query = "delete from {} where id='{}' and partner='{}' and total={}".format(table, _id, partner, total)
+        print(query)
+        self.cursor.execute(query)
+        self.conn.commit()
 
 
 class Message:

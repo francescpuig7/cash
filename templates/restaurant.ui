@@ -46,8 +46,8 @@
   <widget class="QPushButton" name="btn_borrar">
    <property name="geometry">
     <rect>
-     <x>950</x>
-     <y>500</y>
+     <x>1220</x>
+     <y>580</y>
      <width>91</width>
      <height>80</height>
     </rect>
@@ -96,45 +96,6 @@
      <width>50</width>
      <height>50</height>
     </size>
-   </property>
-  </widget>
-  <widget class="QComboBox" name="comboBox_selectDB">
-   <property name="geometry">
-    <rect>
-     <x>1160</x>
-     <y>660</y>
-     <width>181</width>
-     <height>27</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">QComboBox{
-	border: 1px solid gray;
-	border-radius: 3px;
-	padding: 1px 18px 1px 3px;
-	min-width: 6em
-}
-
-QLale::drop-down {
-	subcontrol-origin: padding;
-	subcontrol-position: top right;
-	width: 15px;
-
-	border-left-width: 1px;
-	border-left-color: darkgray;
-	border-left-style: solid;
-	border-top-right-radius: 3px;
-	border-bottom-right-radius: 3px;
-}
-QComboBox::on{
-	padding-top: 3px;
-	padding-left: 4px;
-}
-
-QComboBox::down-arrow:on{
-	top: 1px;
-	left: 1px;
-}</string>
    </property>
   </widget>
   <widget class="QPushButton" name="btn_num1">
@@ -492,7 +453,7 @@ QComboBox::down-arrow:on{
   <widget class="QPushButton" name="btn_config">
    <property name="geometry">
     <rect>
-     <x>1220</x>
+     <x>1310</x>
      <y>500</y>
      <width>91</width>
      <height>80</height>
@@ -614,7 +575,7 @@ QComboBox::down-arrow:on{
    </property>
    <property name="font">
     <font>
-     <pointsize>15</pointsize>
+     <pointsize>13</pointsize>
     </font>
    </property>
    <property name="autoFillBackground">
@@ -860,32 +821,6 @@ p, li { white-space: pre-wrap; }
     <attribute name="title">
      <string/>
     </attribute>
-    <widget class="QProgressBar" name="progressBar">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>670</y>
-       <width>701</width>
-       <height>23</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QProgressBar {
-	border: 1px solid grey;
-	border-radius: 5px;
-	text-align: center;
-}
-
-QProgressBar::chunk {
-	background-color: deepskyblue;
-	margin: 0.5px;
-	width: 10px;
-}</string>
-     </property>
-     <property name="value">
-      <number>24</number>
-     </property>
-    </widget>
    </widget>
    <widget class="QWidget" name="tab_drink">
     <attribute name="icon">
@@ -911,8 +846,8 @@ QProgressBar::chunk {
     <rect>
      <x>1160</x>
      <y>720</y>
-     <width>131</width>
-     <height>80</height>
+     <width>91</width>
+     <height>81</height>
     </rect>
    </property>
    <property name="text">
@@ -928,7 +863,7 @@ QProgressBar::chunk {
   <widget class="QPushButton" name="btn_payments">
    <property name="geometry">
     <rect>
-     <x>1310</x>
+     <x>950</x>
      <y>500</y>
      <width>91</width>
      <height>80</height>
@@ -952,7 +887,7 @@ QProgressBar::chunk {
    <property name="geometry">
     <rect>
      <x>1220</x>
-     <y>580</y>
+     <y>500</y>
      <width>91</width>
      <height>80</height>
     </rect>
@@ -972,7 +907,6 @@ QProgressBar::chunk {
    </property>
   </widget>
   <zorder>lcdNumber</zorder>
-  <zorder>comboBox_selectDB</zorder>
   <zorder>btn_num1</zorder>
   <zorder>btn_num2</zorder>
   <zorder>btn_num3</zorder>
