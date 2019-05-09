@@ -48,7 +48,7 @@ executables = [
 ]
 
 setup(name='cash',
-      version='0.0.2',
+      version='1.0.0',
       description='A cash program for a bars and restaurants',
       #options = dict(build_exe = buildOptions),
       options=options,
