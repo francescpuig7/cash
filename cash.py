@@ -123,11 +123,11 @@ class Payments(QDialog):
         self.date_calendar = None
 
     def save_payment(self):
-        base = float(self.label_base_imposable.text().replace(',', '.'))
+        base = float(self.label_base_imposable.text())
         # todo: set default date
         iva = int(str(self.combobox_iva.currentText()).replace('%', ''))
 
-        total = float(self.label_total.text().replace(',', '.'))
+        total = float(self.label_total.text())
         partner_name = self.combobox_partner.currentText()
         group = self.combobox_group.currentText()
         number = self.label_invoice_number.text()

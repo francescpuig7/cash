@@ -209,6 +209,9 @@
       <pointsize>20</pointsize>
      </font>
     </property>
+    <property name="locale">
+     <locale language="C" country="AnyCountry"/>
+    </property>
     <property name="wrapping">
      <bool>false</bool>
     </property>
@@ -229,6 +232,9 @@
      <font>
       <pointsize>20</pointsize>
      </font>
+    </property>
+    <property name="locale">
+     <locale language="C" country="AnyCountry"/>
     </property>
     <property name="maximum">
      <double>99999.990000000005239</double>
