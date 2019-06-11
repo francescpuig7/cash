@@ -137,7 +137,7 @@ class Payments(QDialog):
             self.messaging.show(message='No has entrat les dades correctament', type='warning')
             return False
 
-        self.db.insert_payment(self.date_calendar, partner_name, group, number, base, iva, total)
+        self.db.insert_payment(self.date_calendar, partner_name, group, number, base, iva_4, iva_10, iva_21, total)
 
         message = 'Pagament entrat correctament: {} - {}, {}€'.format(partner_name, self.date, total)
         self.messaging.show(message)
@@ -151,7 +151,10 @@ class Payments(QDialog):
         self.label_invoice_number.setText('')
         self.label_total.setValue(0.0)
         self.label_base_imposable.setValue(0.0)
-        self.combobox_iva.setCurrentIndex(1)
+        self.label_iva_4.setValue(0.0)
+        self.label_iva_10.setValue(0.0)
+        self.label_iva_21.setValue(0.0)
+        self.label_iva_exempt.setChecked(False)
         self.combobox_partner.setCurrentIndex(1)
         self.combobox_group.setCurrentIndex(1)
 
@@ -274,10 +277,12 @@ class Listing(QDialog):
                     grup = row[2]
                     nfra = row[3]
                     base = row[4]
-                    iva = row[5]
-                    total = row[6]
-                    f.write('{};{};{};{};{};{};{};{};\n'.format(
-                        concepte, dia, partner, nfra, grup, "%.2f" % base, iva, "%.2f" % total)
+                    iva4 = row[4],
+                    iva10 = row[6]
+                    iva21 = row[7]
+                    total = row[8]
+                    f.write('{};{};{};{};{};{};{};{};{};{};\n'.format(
+                        concepte, dia, partner, nfra, grup, "%.2f" % base, "%.2f" % iva4, "%.2f" % iva10, "%.2f" % iva21, "%.2f" % total)
                     )
         try:
             os_name = system().lower()
@@ -1009,8 +1014,10 @@ class Db:
         self.conn.commit()
         self.cursor.execute('''Create table if not exists empleat(id, name, password)''')
         self.conn.commit()
-        self.cursor.execute('''Create table if not exists payments(id, partner, grup, number, base, iva, total)''')
+        self.cursor.execute('''Create table if not exists payments(id, partner, grup, number, base, iva4, iva10, iva21, total)''')
         self.conn.commit()
+        self.cursor.execute('''Create table if not exists client(nif, name, address, cp, telf, email)''')
+        self.alter_payments()
         self.init_db()
 
     @property
@@ -1040,8 +1047,8 @@ class Db:
         self.cursor.executemany('Insert into ticket values (?, ?, ?, ?)', _values)
         self.conn.commit()
 
-    def insert_payment(self, num, partner, group, number, base, iva, total):
-        _values = [(num, partner, group, number, base, iva, total)]
+    def insert_payment(self, num, partner, group, number, base, iva4, iva10, iva21, total):
+        _values = [(num, partner, group, number, base, iva4, iva10, iva21, total)]
         self.cursor.executemany('Insert into payments values (?, ?, ?, ?, ?, ?, ?)', _values)
         self.conn.commit()
 
