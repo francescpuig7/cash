@@ -434,8 +434,8 @@ class Sales(QDialog):
             self.sales_view.setItem(rowPosition, 1, QTableWidgetItem(str(ticket[1])))
             self.sales_view.setItem(rowPosition, 2, QTableWidgetItem(str(ticket[2])))
             if self.view == 'Pagaments':
-                self.sales_view.setItem(rowPosition, 3, QTableWidgetItem(str(ticket[6])))
-                total += ticket[6]
+                self.sales_view.setItem(rowPosition, 3, QTableWidgetItem(str(ticket[8])))
+                total += ticket[8]
             else:
                 self.sales_view.setItem(rowPosition, 3, QTableWidgetItem(str(ticket[3])))
                 total += ticket[3]
@@ -482,6 +482,7 @@ class Foo(QDialog):
         self.tables = dict()
         self.products = dict()
         self.partners = list()
+        self.clients = list()
         self.employee = 'No. def'
         self.table_num = 'Taula 0'
         self.suplement_concept = 'varis'
@@ -1066,7 +1067,12 @@ class Db:
 
     def insert_payment(self, num, partner, group, number, base, iva4, iva10, iva21, total):
         _values = [(num, partner, group, number, base, iva4, iva10, iva21, total)]
-        self.cursor.executemany('Insert into payments values (?, ?, ?, ?, ?, ?, ?)', _values)
+        self.cursor.executemany('Insert into payments values (?, ?, ?, ?, ?, ?, ?, ?, ?)', _values)
+        self.conn.commit()
+
+    def insert_client(self, cif, name, address, cp, phone='', email=''):
+        _values = [(cif, name, address, cp, phone, email)]
+        self.cursor.executemany('Insert into client values (?, ?, ?, ?, ?, ?)', _values)
         self.conn.commit()
 
     def insert_license(self, code, dt):
@@ -1168,6 +1174,12 @@ class Db:
         for row in self.cursor.execute('''select * from proveidor'''):
             _partner.append(row)
         return _partner
+
+    def select_client(self):
+        _costumer = list()
+        for row in self.cursor.execute('''select * from client'''):
+            _costumer.append(row)
+        return _costumer
 
     def delete_ticket(self, table, _id):
         query = "delete from {} where id='{}'".format(table, _id)
