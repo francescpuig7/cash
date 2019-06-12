@@ -117,15 +117,32 @@ class Payments(QDialog):
             self.combobox_partner.addItem(str(partner))
         for group in self.GROUPS.values():
             self.combobox_group.addItem(group)
+        self.label_iva_exempt.stateChanged.connect(self.activate_desactivate_ivas)
 
     def paint(self):
         self.show()
         self.date_calendar = None
 
+    def activate_desactivate_ivas(self):
+        if self.label_iva_exempt.isChecked():
+            self.label_iva_4.setEnabled(False)
+            self.label_iva_10.setEnabled(False)
+            self.label_iva_21.setEnabled(False)
+        else:
+            self.label_iva_4.setEnabled(True)
+            self.label_iva_10.setEnabled(True)
+            self.label_iva_21.setEnabled(True)
+
     def save_payment(self):
         base = float(self.label_base_imposable.text())
-        # todo: set default date
-        iva = int(str(self.combobox_iva.currentText()).replace('%', ''))
+        if not self.label_iva_exempt.isChecked():
+            iva_4 = float(self.label_iva_4.text())
+            iva_10 = float(self.label_iva_10.text())
+            iva_21 = float(self.label_iva_21.text())
+        else:
+            iva_4 = 0.0
+            iva_10 = 0.0
+            iva_21 = 0.0
 
         total = float(self.label_total.text())
         partner_name = self.combobox_partner.currentText()
@@ -133,7 +150,7 @@ class Payments(QDialog):
         number = self.label_invoice_number.text()
         if not self.date_calendar:
             self.date_calendar = self.date.strftime('%Y/%m/%d')
-        if base == 0.0 or iva == 0 or total == 0.0:
+        if base == 0.0 or total == 0.0:
             self.messaging.show(message='No has entrat les dades correctament', type='warning')
             return False
 
@@ -1017,7 +1034,7 @@ class Db:
         self.cursor.execute('''Create table if not exists payments(id, partner, grup, number, base, iva4, iva10, iva21, total)''')
         self.conn.commit()
         self.cursor.execute('''Create table if not exists client(nif, name, address, cp, telf, email)''')
-        self.alter_payments()
+        self.conn.commit()
         self.init_db()
 
     @property
