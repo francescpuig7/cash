@@ -883,7 +883,7 @@ p, li { white-space: pre-wrap; }
     </size>
    </property>
   </widget>
-  <widget class="QPushButton" name="btn_llicencia_2">
+  <widget class="QPushButton" name="btn_factura">
    <property name="geometry">
     <rect>
      <x>1220</x>
@@ -943,7 +943,7 @@ p, li { white-space: pre-wrap; }
   <zorder>product_box</zorder>
   <zorder>btn_cancel_ticket</zorder>
   <zorder>btn_payments</zorder>
-  <zorder>btn_llicencia_2</zorder>
+  <zorder>btn_factura</zorder>
  </widget>
  <resources/>
  <connections/>
