@@ -798,6 +798,10 @@ class Foo(QDialog):
             self.reset_displays()
             #self.print_invoice()
 
+    def gen_invoice(self):
+        pi = PrintInvoice(self, self.db, self.tables[self.table_id], self.ticket_number)
+        pi.show()
+
     def write_invoice(self):
         f = open('invoice.csv', 'w')
         f.write('{0} #{1}{2}'.format('TICKET', self.ticket_number, '\n')),
@@ -829,6 +833,10 @@ class Foo(QDialog):
             pass
         else:
             os.startfile('./invoice.csv', 'print')
+
+    def open_configs(self):
+        config = Config(self, self.db, self.messaging, self.partners, self.employee)
+        config.show()
 
     def change_mode(self):
         diag = QDialog()
@@ -1001,6 +1009,56 @@ class Foo(QDialog):
         dialog.exec_()
         dialog.show()
 
+
+class PrintInvoice(QDialog):
+    def __init__(self, parent, db, info_table, ticket_number):
+        super(PrintInvoice, self).__init__(parent)
+        uic.loadUi(TEMPLATES + '/invoice_print.ui', self)
+        self.db = db
+        self.table = info_table
+        self.ticket_number = ticket_number
+        self.clients = list()
+        self.selected_client = False
+        for c in self.db.select_client():
+            self.clients.append(Client(name=c[1], cif=c[0], direccio=c[2], cp=c[3], phone=c[4], email=c[5]))
+        for client in sorted(self.clients):
+            self.combobox_client.addItem(str(client))
+
+        self.combobox_client.currentIndexChanged['QString'].connect(self.change_client)
+        self.print_button.clicked.connect(self.print_invoice)
+
+    def change_client(self):
+        client = self.combobox_client.currentText()
+        for c in self.clients:
+            if str(c) == client:
+                self.selected_client = c
+                break
+
+    def print_invoice(self):
+        if self.flag_client.isChecked():
+            client = self.combobox_client.currentText()
+            for c in self.clients:
+                if str(c) == client:
+                    self.selected_client = c
+                    break
+        else:
+            name = self.label_name.text()
+            cif = self.label_cif.text()
+            cp = self.label_cp.text()
+            address = self.label_address.text()
+            phone = self.label_phone.text()
+            email = self.label_email.text()
+
+            self.selected_client = Client(name=name, cif=cif, direccio=address, cp=cp, phone=phone, email=email)
+            self.db.insert_client(cif=cif, name=name, address=address, cp=cp, phone=phone, email=email)
+        i = Invoicing()
+        for product in self.table:
+            print(product)
+        filename = i.invoicing(self.selected_client, self.table, 10, self.ticket_number)
+        i.open_invoice(filename)
+        self.close()
+
+
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
@@ -1093,6 +1151,11 @@ class Db:
     def insert_payment(self, num, partner, group, number, base, iva4, iva10, iva21, total):
         _values = [(num, partner, group, number, base, iva4, iva10, iva21, total)]
         self.cursor.executemany('Insert into payments values (?, ?, ?, ?, ?, ?, ?, ?, ?)', _values)
+        self.conn.commit()
+
+    def insert_partner(self, cif, name, group=''):
+        _values = [(cif, name, group)]
+        self.cursor.executemany('Insert into proveidor values (?, ?, ?)', _values)
         self.conn.commit()
 
     def insert_client(self, cif, name, address, cp, phone='', email=''):
