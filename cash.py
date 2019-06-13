@@ -14,6 +14,8 @@ from product import Product, Menjar, Beguda
 from employee import Employee
 from utils import Utils
 from partner import Partner
+from client import Client
+from invoice import Invoicing
 # from order import Table
 import csv
 import configparser
@@ -45,11 +47,12 @@ class Login(QDialog):
 
 
 class Config(QDialog):
-    def __init__(self, db, messaging, employee):
-        super(Config, self).__init__()
+    def __init__(self, parent, db, messaging, partners, employee):
+        super(Config, self).__init__(parent)
         uic.loadUi(TEMPLATES + '/config.ui', self)
         self.db = db
         self.messaging = messaging
+        self.partners = partners
         self._employees = list()
 
         emp_aux = self.db.select_employees()
@@ -60,7 +63,8 @@ class Config(QDialog):
         for employee in self._employees:
             self.comboBox_selectEmployee.addItem(employee.name)
         self.comboBox_selectEmployee.currentIndexChanged['QString'].connect(self.change_default_employee)
-        self.save_button.clicked.connect(self.save_product)
+        self.save_product_button.clicked.connect(self.save_product)
+        self.save_partner_button.clicked.connect(self.save_partner)
 
     def change_default_employee(self, sign):
         print(sign)
@@ -113,13 +117,15 @@ class Payments(QDialog):
         self.buttonBox.accepted.connect(self.save_payment)
         self.buttonBox.rejected.connect(self.reject)
         self.calendar.clicked[QDate].connect(self.set_date)
-        for partner in sorted(self.partners):
-            self.combobox_partner.addItem(str(partner))
+        """for partner in sorted(self.partners):
+            self.combobox_partner.addItem(str(partner))"""
         for group in self.GROUPS.values():
             self.combobox_group.addItem(group)
         self.label_iva_exempt.stateChanged.connect(self.activate_desactivate_ivas)
 
     def paint(self):
+        for partner in sorted(self.partners):
+            self.combobox_partner.addItem(str(partner))
         self.show()
         self.date_calendar = None
 
@@ -144,6 +150,7 @@ class Payments(QDialog):
             iva_10 = 0.0
             iva_21 = 0.0
 
+        # todo: set default date
         total = float(self.label_total.text())
         partner_name = self.combobox_partner.currentText()
         group = self.combobox_group.currentText()
@@ -286,7 +293,7 @@ class Listing(QDialog):
                     )
         elif _type == 'gastos':
             with open(filename, 'w', encoding='utf-8') as f:
-                f.write('CONCEPTE;DIA;PROVEIDOR;NUM FACTURA;GRUP;BASE IMPOSABLE;% IVA;TOTAL;\n')
+                f.write('CONCEPTE;DIA;PROVEIDOR;NUM FACTURA;GRUP;BASE IMPOSABLE;% IVA 4;% IVA 10;% IVA 21;TOTAL;\n')
                 for row in data:
                     concepte = 'GASTO'
                     dia = row[0]
@@ -500,7 +507,7 @@ class Foo(QDialog):
         self.db = Db()
         self.ticket_number = self.db.select_ticket_number()
         self.sales = Sales(self.db)
-        self.config = Config(self.db, self.messaging, self.employee)
+        #self.config = Config(self.db, self.messaging, self.employee)
         row = self.db.select_partner()
         for x in row:
             partner = Partner(name=x[1], cif=x[0])
@@ -521,10 +528,11 @@ class Foo(QDialog):
         self.btn_borrar.clicked.connect(self.delete_item)
         self.btn_llistats.clicked.connect(self.listing.paint)
         self.btn_ventas.clicked.connect(self.sales.paint)
-        self.btn_config.clicked.connect(self.config.paint)
+        self.btn_config.clicked.connect(self.open_configs)
         self.btn_llicencia.clicked.connect(self.license.paint)
         self.btn_payments.clicked.connect(self.payments.paint)
         self.btn_cancel_ticket.clicked.connect(self.cancel_ticket)
+        self.btn_factura.clicked.connect(self.gen_invoice)
         #self.btn_config.clicked.connect(self.config.login)
         #self.btn_config.clicked.connect(self.config)
 
@@ -1108,10 +1116,18 @@ class Db:
         return _table
 
     def select_ticket_number(self):
-        row = [1]
-        for row in self.cursor.execute('''select number from ticket_number where id=1'''):
-            print(row)
-        return row[0]
+        try:
+            for row in self.cursor.execute('''select number from ticket_number where id=1'''):
+                print('ticket number')
+                print(row)
+            ret = row[0]
+        except:
+            _values = [(1, 1)]
+            self.cursor.executemany('Insert into ticket_number values (?, ?)', _values)
+            self.conn.commit()
+            ret = 1
+
+        return ret
 
     def select_employees(self):
         self.conn.commit()
@@ -1192,6 +1208,19 @@ class Db:
         print(query)
         self.cursor.execute(query)
         self.conn.commit()
+
+    def alter_payments(self):
+        drop_column = "ALTER TABLE payments DELETE COLUMN iva"
+        #self.cursor.execute(drop_column)
+        try:
+            add_column = "ALTER TABLE payments ADD COLUMN iva4"
+            self.cursor.execute(add_column)
+            add_column = "ALTER TABLE payments ADD COLUMN iva10"
+            self.cursor.execute(add_column)
+            add_column = "ALTER TABLE payments ADD COLUMN iva21"
+            self.cursor.execute(add_column)
+        except Exception:
+            return False
 
 
 class Message:
