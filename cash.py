@@ -318,7 +318,7 @@ class Listing(QDialog):
                     grup = row[2]
                     nfra = row[3]
                     base = row[4]
-                    iva4 = row[4],
+                    iva4 = row[5]
                     iva10 = row[6]
                     iva21 = row[7]
                     total = row[8]
