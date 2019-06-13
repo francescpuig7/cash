@@ -84,6 +84,23 @@ class Config(QDialog):
             except ValueError:
                 self.messaging.show('Producte no entrat', 'warning')
 
+    def save_partner(self):
+        if self.label_partner_name.text() and self.label_partner_cif.text():
+            try:
+                partner_name = self.label_partner_name.text()
+                partner_cif = self.label_partner_cif.text()
+                partner_address = self.label_partner_address.text()
+                p = Partner(name=partner_name, cif=partner_cif, direccio=partner_address)
+                self.db.insert_partner(p.cif, p.name)
+                self.partners.append(p)
+                self.messaging.show('Producte entrat')
+                # Reset texts
+                self.label_partner_name.setText('')
+                self.label_partner_cif.setText('')
+                self.label_partner_address.setText('')
+            except ValueError:
+                self.messaging.show('Proveidor no entrat', 'warning')
+
     def paint(self):
         self.show()
 
