@@ -66,5 +66,5 @@ class Invoicing(object):
 
     @staticmethod
     def extract_iva(total, iva):
-        substract = (float(total) * iva) / 100
-        return float(total) - substract
+        substract = float(total) / (1 + (float(iva) / 100.0))
+        return substract
