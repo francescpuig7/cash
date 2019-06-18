@@ -815,6 +815,9 @@ class Foo(QDialog):
             #self.print_invoice()
 
     def gen_invoice(self):
+        if self.lcdNumber.value() == 0:
+            self.messaging.show('No has afegit cap producte', 'warning')
+            return False
         pi = PrintInvoice(self, self.db, self.messaging, self.tables[self.table_id], self.ticket_number)
         pi.show()
 
