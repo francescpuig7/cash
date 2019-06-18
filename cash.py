@@ -815,7 +815,7 @@ class Foo(QDialog):
             #self.print_invoice()
 
     def gen_invoice(self):
-        pi = PrintInvoice(self, self.db, self.tables[self.table_id], self.ticket_number)
+        pi = PrintInvoice(self, self.db, self.messaging, self.tables[self.table_id], self.ticket_number)
         pi.show()
 
     def write_invoice(self):
@@ -1033,10 +1033,11 @@ class Foo(QDialog):
 
 
 class PrintInvoice(QDialog):
-    def __init__(self, parent, db, info_table, ticket_number):
+    def __init__(self, parent, db, messaging, info_table, ticket_number):
         super(PrintInvoice, self).__init__(parent)
         uic.loadUi(TEMPLATES + '/invoice_print.ui', self)
         self.db = db
+        self.messaging = messaging
         self.table = info_table
         self.ticket_number = ticket_number
         self.clients = list()
@@ -1047,7 +1048,24 @@ class PrintInvoice(QDialog):
             self.combobox_client.addItem(str(client))
 
         self.combobox_client.currentIndexChanged['QString'].connect(self.change_client)
+        self.flag_client.stateChanged.connect(self.activate_desactivate_labels)
         self.print_button.clicked.connect(self.print_invoice)
+
+    def activate_desactivate_labels(self):
+        if self.flag_client.isChecked():
+            self.label_name.setEnabled(False)
+            self.label_cif.setEnabled(False)
+            self.label_cp.setEnabled(False)
+            self.label_address.setEnabled(False)
+            self.label_phone.setEnabled(False)
+            self.label_email.setEnabled(False)
+        else:
+            self.label_name.setEnabled(True)
+            self.label_cif.setEnabled(True)
+            self.label_cp.setEnabled(True)
+            self.label_address.setEnabled(True)
+            self.label_phone.setEnabled(True)
+            self.label_email.setEnabled(True)
 
     def change_client(self):
         client = self.combobox_client.currentText()
@@ -1070,6 +1088,10 @@ class PrintInvoice(QDialog):
             address = self.label_address.text()
             phone = self.label_phone.text()
             email = self.label_email.text()
+            if name == '' or cif == '':
+                self.messaging.show('Client no entrat correctament', 'warning')
+                self.close()
+                return False
 
             self.selected_client = Client(name=name, cif=cif, direccio=address, cp=cp, phone=phone, email=email)
             self.db.insert_client(cif=cif, name=name, address=address, cp=cp, phone=phone, email=email)

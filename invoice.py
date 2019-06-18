@@ -22,7 +22,7 @@ class Invoicing(object):
         )
         provider = Provider(
             'Can Guix Bar Restaurant', zip_code="17800", address="Carrer Mulleras, 3", city="Olot, Girona",
-            email="canguix@gmail.com", phone="+34 972 26 10 40", vat_id='E17087289',
+            email="canguix1040@gmail.com", phone="+34 972 26 10 40", vat_id='E17087289',
             logo_filename="/Users/puig/Documents/codi/cash/cash/icons/logo_factura.jpg"
         )
 
