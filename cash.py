@@ -303,8 +303,11 @@ class Listing(QDialog):
                         concepte = 'VARIS BARRA'
                     else:
                         concepte = 'VARIS TAULA'
-                    iva = (float(row[3]) * self.iva) / 100
-                    subtotal = float(row[3]) - iva
+                    subtotal = self.calc_iva(float(row[3]))
+                    iva = float(row[3] - subtotal)
+                    # Patched iva
+                    #iva = (float(row[3]) * self.iva) / 100
+                    #subtotal = float(row[3]) - iva
                     f.write('{};{};{};{};{};{};\n'.format(
                         concepte, row[0], self.iva, "%.2f" % iva, "%.2f" % subtotal, "%.2f" % row[3])
                     )
@@ -709,8 +712,11 @@ class Foo(QDialog):
         result = result+u'€   '+str(self.add_num)
         self.add_num = 1
 
-        iva = (price_multi * self.iva) / 100
-        subtotal = price_multi - iva
+        subtotal = self.calc_iva(price_multi)
+        iva = price_multi - subtotal
+        # Patched iva
+        #iva = (price_multi * self.iva) / 100
+        #subtotal = price_multi - iva
         self.add_price(price_multi, subtotal, iva)
 
     def set_product_to_del(self, nothing):
@@ -735,8 +741,11 @@ class Foo(QDialog):
         #res = self.separa(result)
         #result = '%s %s' % (method, price)
 
-        iva = (price_multi * self.iva) / 100
-        subtotal = price_multi - iva
+        subtotal = self.calc_iva(price_multi)
+        iva = price_multi - subtotal
+        # Patched iva
+        #iva = (price_multi * self.iva) / 100
+        #subtotal = price_multi - iva
         self.add_price(price_multi, subtotal, iva)
 
     def delete_item(self):
@@ -756,14 +765,21 @@ class Foo(QDialog):
         self.reset_displays()
         self.tables[self.table_id] = []
 
+    def calc_iva(self, total):
+        substract = float(total) / (1 + (self.iva / 100.0))
+        return substract
+
     def recalc_price(self):
         total = 0
         for product in self.tables[self.table_id]:
             total += float(product.price)
 
         if total != 0.0:
-            iva = (total * self.iva) / 100
-            subtotal = total - iva
+            subtotal = self.calc_iva(total)
+            iva = total - subtotal
+            # Patched iva
+            #iva = (total * self.iva) / 100
+            #subtotal = total - iva
             self.subtotal_label.setText('Subtotal: ' + str("%.2f" % subtotal))
             self.total_label.setText('Total: ' + str("%.2f" % total))
             self.iva_label.setText('IVA: ' + str("%.2f" % iva))
@@ -864,8 +880,11 @@ class Foo(QDialog):
             self.tables[self.table_id].append(LineProd(product.name, price_multi, self.add_num))
             self.add_num = 1
 
-            iva = (price_multi * self.iva) / 100
-            subtotal = price_multi - iva
+            subtotal = self.calc_iva(price_multi)
+            iva = price_multi - subtotal
+            # Patched iva
+            #iva = (price_multi * self.iva) / 100
+            #subtotal = price_multi - iva
             self.add_price(price_multi, subtotal, iva)
 
     def show_dialog_table(self):
@@ -928,8 +947,11 @@ class Foo(QDialog):
             self.set_product_table(product.name, product.quant, product.price)
 
         if total != 0.0:
-            iva = (total * self.iva) / 100
-            subtotal = total - iva
+            subtotal = self.calc_iva(total)
+            iva = total - subtotal
+            # Patched iva
+            #iva = (total * self.iva) / 100
+            #subtotal = total - iva
             self.subtotal_label.setText('Subtotal: ' + str("%.2f" % subtotal))
             self.total_label.setText('Total: ' + str("%.2f" % total))
             self.iva_label.setText('IVA: ' + str("%.2f" % iva))
