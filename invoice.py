@@ -54,7 +54,8 @@ class Invoicing(object):
 
         return pdf_path
 
-    def open_invoice(self, filename):
+    @staticmethod
+    def open_invoice(filename):
         try:
             os_name = system().lower()
             if os_name == 'windows':
