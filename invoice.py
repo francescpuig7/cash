@@ -1,9 +1,13 @@
 import os
+import configparser
 from subprocess import Popen
 from platform import system
 from datetime import datetime
 from InvoiceGenerator.api import Invoice, Item, Client, Provider, Creator, Address
 from InvoiceGenerator.pdf import SimpleInvoice
+
+ICONS = os.path.join('.', 'icons')
+
 
 class Invoicing(object):
     def __init__(self):
@@ -20,13 +24,14 @@ class Invoicing(object):
         client = Client(
             c.name, address=c.direccio, zip_code=c.cp, phone=c.phone, email=c.email, vat_id=c.cif,
         )
+        name, cp, address, city, email, phone = self.get_config_file_info()
+
         provider = Provider(
-            'Can Guix Bar Restaurant', zip_code="17800", address="Carrer Mulleras, 3", city="Olot, Girona",
-            email="canguix1040@gmail.com", phone="+34 972 26 10 40", vat_id='E17087289',
-            logo_filename="/Users/puig/Documents/codi/cash/cash/icons/logo_factura.jpg"
+            name, zip_code=cp, address=address, city=city, email=email, phone=phone, vat_id='E17087289',
+            logo_filename=ICONS + '/logo_factura.jpg'
         )
 
-        creator = Creator('Can Guix')
+        creator = Creator(name)
 
         invoice = Invoice(client, provider, creator)
         os.environ["INVOICE_LANG"] = "ca"
@@ -68,3 +73,17 @@ class Invoicing(object):
     def extract_iva(total, iva):
         substract = float(total) / (1 + (float(iva) / 100.0))
         return substract
+
+    @staticmethod
+    def get_config_file_info():
+        parser = configparser.ConfigParser()
+        base_path = './configs/'
+        parser.read(base_path + '/config.cfg')
+        name = parser.get('P_NAME', 'p_name')
+        cp = parser.get('P_CP', 'p_cp')
+        address = parser.get('P_ADDRESS', 'p_address')
+        city = parser.get('P_CITY', 'p_city')
+        email = parser.get('P_EMAIL', 'p_email')
+        phone = parser.get('P_PHONE', 'p_phone')
+
+        return name, cp, address, city, email, phone
