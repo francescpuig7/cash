@@ -1091,7 +1091,7 @@ class PrintInvoice(QDialog):
             address = self.label_address.text()
             phone = self.label_phone.text()
             email = self.label_email.text()
-            if name == '' or cif == '':
+            if name == '' or cif == '' or address == '' or cp == '':
                 self.messaging.show('Client no entrat correctament', 'warning')
                 self.close()
                 return False
