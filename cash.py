@@ -93,7 +93,7 @@ class Config(QDialog):
                 p = Partner(name=partner_name, cif=partner_cif, direccio=partner_address)
                 self.db.insert_partner(p.cif, p.name)
                 self.partners.append(p)
-                self.messaging.show('Producte entrat')
+                self.messaging.show('Proveidor entrat')
                 # Reset texts
                 self.label_partner_name.setText('')
                 self.label_partner_cif.setText('')
