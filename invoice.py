@@ -3,6 +3,7 @@ import configparser
 from subprocess import Popen
 from platform import system
 from datetime import datetime
+from tempfile import NamedTemporaryFile
 from InvoiceGenerator.api import Invoice, Item, Client, Provider, Creator, Address
 from InvoiceGenerator.pdf import SimpleInvoice
 
@@ -48,7 +49,8 @@ class Invoicing(object):
                 )
             )
 
-        pdf_path = "/Users/puig/Desktop/test_invoice.pdf"
+        f = NamedTemporaryFile(delete=False, suffix='.pdf')
+        pdf_path = f.name
         pdf = SimpleInvoice(invoice)
         pdf.gen(pdf_path, generate_qr_code=False)
 

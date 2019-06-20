@@ -1,2 +1,2 @@
-pandasi
+pandas
 https://github.com/francescpuig7/InvoiceGenerator/archive/master.zip

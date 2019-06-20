@@ -63,15 +63,15 @@ class Config(QDialog):
         for employee in self._employees:
             self.comboBox_selectEmployee.addItem(employee.name)
         self.comboBox_selectEmployee.currentIndexChanged['QString'].connect(self.change_default_employee)
-        self.save_product_button.clicked.connect(self.save_product)
+        #self.save_product_button.clicked.connect(self.save_product)
         self.save_partner_button.clicked.connect(self.save_partner)
 
     def change_default_employee(self, sign):
         print(sign)
 
     def save_product(self):
-        if self.price.text() and self.name.text():
-            try:
+        try:
+            if self.price.text() and self.name.text():
                 price = float(self.price.text())
                 category = str(self.checkbox_categoria.currentText())
                 with open('products.csv', 'a') as file:
@@ -81,8 +81,8 @@ class Config(QDialog):
                 # Reset texts
                 self.price.setText('')
                 self.name.setText('')
-            except ValueError:
-                self.messaging.show('Producte no entrat', 'warning')
+        except Exception as err:
+            self.messaging.show('Producte no entrat', 'warning')
 
     def save_partner(self):
         if self.label_partner_name.text() and self.label_partner_cif.text():
