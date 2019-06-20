@@ -47,10 +47,13 @@ executables = [
     )
 ]
 
+install_requires = ['https://github.com/francescpuig7/InvoiceGenerator/archive/master.zip',]
+
 setup(name='cash',
-      version='1.0.0',
+      version='1.1.0',
       description='A cash program for a bars and restaurants',
       #options = dict(build_exe = buildOptions),
       options=options,
       executables=executables,
+      install_requires=install_requires,
       author='Francesc Puig')
