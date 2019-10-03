@@ -305,12 +305,12 @@ class Listing(QDialog):
                         concepte = 'VARIS TAULA'
                     subtotal = self.calc_iva(float(row[3]))
                     iva = float(row[3] - subtotal)
-                    # Patched iva
-                    #iva = (float(row[3]) * self.iva) / 100
-                    #subtotal = float(row[3]) - iva
                     f.write('{};{};{};{};{};{};\n'.format(
-                        concepte, row[0], self.iva, "%.2f" % iva, "%.2f" % subtotal, "%.2f" % row[3])
-                    )
+                        concepte, row[0], self.iva,
+                        ("%.2f" % iva).replace('.', ','),
+                        ("%.2f" % subtotal).replace('.', ','),
+                        ("%.2f" % row[3]).replace('.', ',')
+                    ))
         elif _type == 'gastos':
             with open(filename, 'w', encoding='utf-8') as f:
                 f.write('CONCEPTE;DIA;PROVEIDOR;NUM FACTURA;GRUP;BASE IMPOSABLE;% IVA 4;% IVA 10;% IVA 21;TOTAL;\n')
@@ -326,8 +326,13 @@ class Listing(QDialog):
                     iva21 = row[7]
                     total = row[8]
                     f.write('{};{};{};{};{};{};{};{};{};{};\n'.format(
-                        concepte, dia, partner, nfra, grup, "%.2f" % base, "%.2f" % iva4, "%.2f" % iva10, "%.2f" % iva21, "%.2f" % total)
-                    )
+                        concepte, dia, partner, nfra, grup,
+                        ("%.2f" % base).format('.', ','),
+                        ("%.2f" % iva4).format('.', ','),
+                        ("%.2f" % iva10).format('.', ','),
+                        ("%.2f" % iva21).format('.', ','),
+                        ("%.2f" % total).format('.', ',')
+                    ))
         try:
             os_name = system().lower()
             if os_name == 'windows':
