@@ -327,11 +327,11 @@ class Listing(QDialog):
                     total = row[8]
                     f.write('{};{};{};{};{};{};{};{};{};{};\n'.format(
                         concepte, dia, partner, nfra, grup,
-                        ("%.2f" % base).format('.', ','),
-                        ("%.2f" % iva4).format('.', ','),
-                        ("%.2f" % iva10).format('.', ','),
-                        ("%.2f" % iva21).format('.', ','),
-                        ("%.2f" % total).format('.', ',')
+                        ("%.2f" % base).replace('.', ','),
+                        ("%.2f" % iva4).replace('.', ','),
+                        ("%.2f" % iva10).replace('.', ','),
+                        ("%.2f" % iva21).replace('.', ','),
+                        ("%.2f" % total).replace('.', ',')
                     ))
         try:
             os_name = system().lower()
