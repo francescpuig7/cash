@@ -15,6 +15,18 @@ A cash program for a bars and restaurants
 
 ![image](https://user-images.githubusercontent.com/19941550/56685456-4a772b80-66d2-11e9-8179-5d86b19adf2c.png)
 
+### How to install
+
+- Get the dist package and install via next next.
+- Go to the installation dir and set the configs in`./config/config.cfg` like CIF, Name...
+- Execute `cash.exe` and enjoy
+
+### How to migrate version
+
+- Get the installation dir and copy `config` dir.
+- Copy db located in Userprofile named `cash.db` 
+- Unninstall old version and install the new
+- Move `configs` copied folder on installation dir
 
 #### On a Win10 py3.7 cx-freeze install:
 
@@ -22,3 +34,6 @@ https://github.com/anthony-tuininga/cx_Freeze/issues/407#issuecomment-453035642
 
 `pip install --upgrade git+https://github.com/anthony-tuininga/cx_Freeze.git@master`
 on cmd execute: `cxfreeze-postinstall`
+
+`python setup.py build`
+`python setup.py bdist_msi`
