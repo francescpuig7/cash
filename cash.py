@@ -303,7 +303,7 @@ class Listing(QDialog):
                         concepte = 'VARIS BARRA'
                     else:
                         concepte = 'VARIS TAULA'
-                    subtotal = self.calc_iva(float(row[3]))
+                    subtotal = float(row[3]) / (1 + (self.iva / 100.0))
                     iva = float(row[3] - subtotal)
                     f.write('{};{};{};{};{};{};\n'.format(
                         concepte, row[0], self.iva,
