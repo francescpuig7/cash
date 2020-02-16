@@ -104,6 +104,7 @@ class Config(QDialog):
     def paint(self):
         self.show()
 
+
 class Payments(QDialog):
 
     GROUPS = {
@@ -157,7 +158,9 @@ class Payments(QDialog):
             self.label_iva_21.setEnabled(True)
 
     def save_payment(self):
-        base = float(self.label_base_imposable.text())
+        base4 = float(self.label_base_imposable4.text())
+        base10 = float(self.label_base_imposable10.text())
+        base21 = float(self.label_base_imposable21.text())
         if not self.label_iva_exempt.isChecked():
             iva_4 = float(self.label_iva_4.text())
             iva_10 = float(self.label_iva_10.text())
@@ -174,12 +177,13 @@ class Payments(QDialog):
         number = self.label_invoice_number.text()
         if not self.date_calendar:
             self.date_calendar = self.date.strftime('%Y/%m/%d')
-        if base == 0.0 or total == 0.0:
+        if total == 0.0:
             self.messaging.show(message='No has entrat les dades correctament', type='warning')
             return False
 
-        self.db.insert_payment(self.date_calendar, partner_name, group, number, base, iva_4, iva_10, iva_21, total)
-
+        self.db.insert_payment(
+            self.date_calendar, partner_name, group, number, base4, iva_4, base10, iva_10, base21, iva_21, total
+        )
         message = 'Pagament entrat correctament: {} - {}, {}€'.format(partner_name, self.date, total)
         self.messaging.show(message)
         self.reset_values()
