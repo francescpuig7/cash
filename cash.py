@@ -1204,9 +1204,9 @@ class Db:
         self.cursor.executemany('Insert into ticket values (?, ?, ?, ?)', _values)
         self.conn.commit()
 
-    def insert_payment(self, num, partner, group, number, base, iva4, iva10, iva21, total):
-        _values = [(num, partner, group, number, base, iva4, iva10, iva21, total)]
-        self.cursor.executemany('Insert into payments values (?, ?, ?, ?, ?, ?, ?, ?, ?)', _values)
+    def insert_payment(self, num, partner, group, number, base4, iva4, base10, iva10, base21, iva21, total):
+        _values = [(num, partner, group, number, base4, iva4, base10, iva10, base21, iva21, total)]
+        self.cursor.executemany('Insert into payments values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', _values)
         self.conn.commit()
 
     def insert_partner(self, cif, name, group=''):
