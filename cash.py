@@ -317,23 +317,27 @@ class Listing(QDialog):
                     ))
         elif _type == 'gastos':
             with open(filename, 'w', encoding='utf-8') as f:
-                f.write('CONCEPTE;DIA;PROVEIDOR;NUM FACTURA;GRUP;BASE IMPOSABLE;% IVA 4;% IVA 10;% IVA 21;TOTAL;\n')
+                f.write('CONCEPTE;DIA;PROVEIDOR;NUM FACTURA;GRUP;BASE IMPOSABLE IVA 4;% IVA 4;BASE IMPOSABLE IVA 10;% IVA 10;BASE IMPOSABLE IVA 21;% IVA 21;TOTAL;\n')
                 for row in data:
                     concepte = 'GASTO'
                     dia = row[0]
                     partner = row[1]
                     grup = row[2]
                     nfra = row[3]
-                    base = row[4]
+                    base4 = row[4]
                     iva4 = row[5]
-                    iva10 = row[6]
-                    iva21 = row[7]
-                    total = row[8]
+                    base10 = row[6]
+                    iva10 = row[7]
+                    base21 = row[8]
+                    iva21 = row[9]
+                    total = row[10]
                     f.write('{};{};{};{};{};{};{};{};{};{};\n'.format(
                         concepte, dia, partner, nfra, grup,
-                        ("%.2f" % base).replace('.', ','),
+                        ("%.2f" % base4).replace('.', ','),
                         ("%.2f" % iva4).replace('.', ','),
+                        ("%.2f" % base10).replace('.', ','),
                         ("%.2f" % iva10).replace('.', ','),
+                        ("%.2f" % base21).replace('.', ','),
                         ("%.2f" % iva21).replace('.', ','),
                         ("%.2f" % total).replace('.', ',')
                     ))
