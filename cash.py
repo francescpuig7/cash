@@ -337,7 +337,7 @@ class Listing(QDialog):
                         base10 = total - iva10
                     if iva21:
                         base21 = total - iva21
-                    f.write('{};{};{};{};{};{};{};{};{};{};\n'.format(
+                    f.write('{};{};{};{};{};{};{};{};{};{};{};{};{};\n'.format(
                         concepte, dia, partner, nfra, grup,
                         ("%.2f" % base).replace('.', ','),
                         ("%.2f" % iva4).replace('.', ','),
