@@ -313,7 +313,10 @@ class Listing(QDialog):
                     ))
         elif _type == 'gastos':
             with open(filename, 'w', encoding='utf-8') as f:
-                f.write('CONCEPTE;DIA;PROVEIDOR;NUM FACTURA;GRUP;BASE IMPOSABLE;% IVA 4;% IVA 10;% IVA 21;TOTAL;\n')
+                f.write(
+                    "CONCEPTE;DIA;PROVEIDOR;NUM FACTURA;GRUP;BASE IMPOSABLE;"
+                    "% IVA 4;BASE 4;% IVA 10;BASE 10;% IVA 21;BASE 21;TOTAL;\n"
+                )
                 for row in data:
                     concepte = 'GASTO'
                     dia = row[0]
@@ -325,12 +328,24 @@ class Listing(QDialog):
                     iva10 = row[6]
                     iva21 = row[7]
                     total = row[8]
-                    f.write('{};{};{};{};{};{};{};{};{};{};\n'.format(
+                    base4 = 0.0
+                    base10 = 0.0
+                    base21 = 0.0
+                    if iva4:
+                        base4 = total - iva4
+                    if iva10:
+                        base10 = total - iva10
+                    if iva21:
+                        base21 = total - iva21
+                    f.write('{};{};{};{};{};{};{};{};{};{};{};{};{};\n'.format(
                         concepte, dia, partner, nfra, grup,
                         ("%.2f" % base).replace('.', ','),
                         ("%.2f" % iva4).replace('.', ','),
+                        ("%.2f" % base4).replace('.', ','),
                         ("%.2f" % iva10).replace('.', ','),
+                        ("%.2f" % base10).replace('.', ','),
                         ("%.2f" % iva21).replace('.', ','),
+                        ("%.2f" % base21).replace('.', ','),
                         ("%.2f" % total).replace('.', ',')
                     ))
         try:
