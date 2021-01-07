@@ -1,7 +1,7 @@
 arrow==0.12.1
 Babel==2.5.1
 libComXML==2.2.3
-lxml==4.0.0
+lxml==4.6.2
 numpy==1.16.2
 ooquery==0.13.0
 osconf==0.1.3
