@@ -50,7 +50,7 @@ executables = [
 install_requires = ['https://github.com/francescpuig7/InvoiceGenerator/archive/master.zip',]
 
 setup(name='cash',
-      version='1.2.0',
+      version='1.2.1',
       description='A cash program for a bars and restaurants',
       #options = dict(build_exe = buildOptions),
       options=options,
