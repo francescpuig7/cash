@@ -48,6 +48,8 @@ executables = [
 ]
 
 install_requires = ['https://github.com/francescpuig7/InvoiceGenerator/archive/master.zip',]
+# Si no funciona, descarregar-lo, pip install -e . i descomentar la seguent linea
+#install_requires = ['InvoiceGenerator-master']
 
 setup(name='cash',
       version='1.2.1',
