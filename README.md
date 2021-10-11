@@ -28,6 +28,18 @@ A cash program for a bars and restaurants
 - Unninstall old version and install the new
 - Move `configs` copied folder on installation dir
 
+#### On py3.9
+
+`pip install --upgrade cx-Freeze`
+
+- Clone `https://github.com/francescpuig7/InvoiceGenerator/archive/master.zip'`
+- cd InvoiceGenerator
+- `pip install -e .`
+
+`python setup.py build`
+`python setup.py bdist_msi`
+:warning: on windows, copy&paste installation windows dir files
+
 #### On a Win10 py3.7 cx-freeze install:
 
 https://github.com/anthony-tuininga/cx_Freeze/issues/407#issuecomment-453035642
