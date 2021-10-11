@@ -47,7 +47,12 @@ executables = [
     )
 ]
 
-install_requires = ['https://github.com/francescpuig7/InvoiceGenerator/archive/master.zip',]
+# py3.7
+#install_requires = ['https://github.com/francescpuig7/InvoiceGenerator/archive/master.zip',]
+
+# py 3.9
+# Clonar repo, pip install -e . i descomentar la seguent linia
+#install_requires = ['InvoiceGenerator-master']
 
 setup(name='cash',
       version='1.2.1',
