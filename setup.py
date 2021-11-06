@@ -47,11 +47,8 @@ executables = [
     )
 ]
 
-# py3.7
-#install_requires = ['https://github.com/francescpuig7/InvoiceGenerator/archive/master.zip',]
-
-# py 3.9
-# Clonar repo, pip install -e . i descomentar la seguent linia
+install_requires = ['https://github.com/francescpuig7/InvoiceGenerator/archive/master.zip',]
+# Si no funciona, descarregar-lo, pip install -e . i descomentar la seguent linea
 #install_requires = ['InvoiceGenerator-master']
 
 setup(name='cash',
