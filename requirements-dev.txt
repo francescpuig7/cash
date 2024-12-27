@@ -2,5 +2,5 @@ lxml==4.9.1
 numpy==1.16.2
 pandas==0.24.2
 py2exe==0.9.2.2
-python-sql==0.9
+python-sql==1.5.2
 pytz==2017.2
